@@ -1,4 +1,5 @@
 #include <lemins.h>
+#include <unistd.h>
 
 void		maze_error(t_maze * const maze, const char str[])
 {
