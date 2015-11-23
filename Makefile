@@ -30,55 +30,43 @@
 # -------------Compilateur------------------#
 CC		=	gcc
 #--------------Name-------------------------#
-NAME	=	fdf
+NAME	=	lem_in
 MYPATH	=	$(HOME)
 #--------------Sources----------------------#
-FILES	=	main.c								\
-			analyse/get_next_line.c				\
-			parsing/get_map.c					\
-			maths/matrices.c					\
-			maths/matrices_moves.c				\
-			maths/matrices_utils.c				\
-			maths/vectors.c						\
-			render/draw_map.c					\
-			render/draw_line.c					\
-			lib/init.c							\
-			lib/hooks.c							\
-			lib/extra_hooks.c					\
-			lib/moves.c							\
-			lib/libft.c							\
-			lib/libft2.c						\
-			lib/libft3.c						\
-			lib/mlx_tools.c
+FILES	=	main.c					\
+			analyse.c				\
+			errors.c				\
+			extract.c
 
-INC		=	-I minilibx_macos -I./libft/ -I./includes
+INC		=	-I ./includes -I ./libft -I ./htable
+LIBS	=	libft/libft.a htable/htable.a
 CCFLAGS	=	-Wall -Wextra -Werror -g
-LDFLAGS	=	-framework glut -framework Cocoa -framework OpenGL
 
 SRCS	=	$(addprefix srcs/, $(FILES))
 OBJS	=	$(SRCS:.c=.o)
 
 #--------------Actions----------------------#
 
-.PHONY: MLX $(NAME) clean fclean re
+.PHONY: LIBRARIES $(NAME) clean fclean re
 
 all: $(NAME)
 
-MLX:
-	make -C minilibx_macos
+LIBRARIES:
+	make -C libft
+	make -C htable
 
-$(NAME): MLX $(OBJS)
-	$(CC) $(CCFLAGS) $(LDFLAGS) $(INC) $(OBJS) -o $(NAME) minilibx_macos/libmlx.a -O3
+$(NAME): LIBRARIES $(OBJS)
+	$(CC) $(CCFLAGS) $(INC) $(OBJS) -o $(NAME) $(LIBS) -O3
 
 %.o: %.c
 	$(CC) $(CCFLAGS) -c  $(INC) $< -o $@
 	
 clean:
-	make clean -C minilibx_macos
+	make clean -C libft
+	make clean -C htable
 	rm -f $(OBJS)
 	
 fclean:	clean
-	make clean -C minilibx_macos
 	rm -f $(NAME)
 
 re: fclean all

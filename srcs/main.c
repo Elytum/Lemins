@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include <lemins.h>
-#include <get_next_line.h>
+#include <libft.h>
 
 #include <fcntl.h>
 

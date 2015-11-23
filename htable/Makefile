@@ -1,68 +1,84 @@
-# **************************************************************************** #
+#******************************************************************************#
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: achazal <achazal@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2014/11/03 11:54:29 by achazal           #+#    #+#              #
-#    Updated: 2014/12/13 12:55:35 by achazal          ###   ########.fr        #
+#    Created: 2015/01/28 22:41:37 by achazal           #+#    #+#              #
+#    Updated: 2015/01/28 22:41:42 by achazal          ###   ########.fr        #
 #                                                                              #
-# **************************************************************************** #
+#******************************************************************************#
 
-# -------------Compilateur------------------#
-CC		=	gcc
-#--------------Name-------------------------#
-NAME	=	fdf
-MYPATH	=	$(HOME)
-#--------------Sources----------------------#
-FILES	=	main.c								\
-			parsing/get_next_line.c				\
-			parsing/get_map.c					\
-			maths/matrices.c					\
-			maths/matrices_moves.c				\
-			maths/matrices_utils.c				\
-			maths/vectors.c						\
-			render/draw_map.c					\
-			render/draw_line.c					\
-			lib/init.c							\
-			lib/hooks.c							\
-			lib/extra_hooks.c					\
-			lib/moves.c							\
-			lib/libft.c							\
-			lib/libft2.c						\
-			lib/libft3.c						\
-			lib/mlx_tools.c
+.PHONY: all, clean, fclean, mrproper, re, fast
 
-INC		=	-I minilibx_macos -I./libft/ -I./includes
-CCFLAGS	=	-Wall -Wextra -Werror -g
-LDFLAGS	=	-framework glut -framework Cocoa -framework OpenGL
+CC = clang
+NAME = htable.a
+CFLAGS = -Wall -Werror -Wextra -pedantic -I./ -Xclang -fcolor-diagnostics -O3
+SOURCE = htable.c
 
-SRCS	=	$(addprefix srcs/, $(FILES))
-OBJS	=	$(SRCS:.c=.o)
+OBJ = $(SOURCE:.c=.o)
 
-#--------------Actions----------------------#
 
-.PHONY: MLX $(NAME) clean fclean re
+ifeq ($(FAST), 1)
+	CFLAGS := -O3 $(CFLAGS)
+else
+	CFLAGS := -O2 $(CFLAGS)
+endif
 
-all: $(NAME)
 
-MLX:
-	make -C minilibx_macos
+all : $(NAME)
 
-$(NAME): MLX $(OBJS)
-	$(CC) $(CCFLAGS) $(LDFLAGS) $(INC) $(OBJS) -o $(NAME) minilibx_macos/libmlx.a -O3
+$(NAME) : $(OBJ)
+	@echo "\033[31;1m• \033[0mCreating archive $@ ...\033[55G\c"
+	@export result=`ar rcs $@ $(OBJ) 2>&1` ; \
+	if [ "$$result" = "" ] ; then \
+		echo "\033[37;1m[\033[32mOK !\033[37m]\033[0m" ; \
+	else \
+		echo "\033[37;1m[\033[31mFAIL\033[37m]\033[0m" ; \
+		echo "\n$$result" ; \
+		exit 1 ; \
+	fi
 
-%.o: %.c
-	$(CC) $(CCFLAGS) -c  $(INC) $< -o $@
-	
-clean:
-	make clean -C minilibx_macos
-	rm -f $(OBJS)
-	
-fclean:	clean
-	make clean -C minilibx_macos
-	rm -f $(NAME)
+ifeq ($(FAST), 1)
 
-re: fclean all
-	make re -C minilibx_macos
+%.o : %_fast.c libft.h
+	@echo "\033[31;1m• \033[0mCreating object file $@ ...\033[55G\c"
+	@export result=`$(CC) $(CFLAGS) -c $< -o $@ 2>&1` ; \
+	if [ "$$result" = "" ] ; then \
+		echo "\033[37;1m[\033[32mOK !\033[37m]\033[0m" ; \
+	else \
+		echo "\033[37;1m[\033[31mFAIL\033[37m]\033[0m" ; \
+		echo "\n$$result" ; \
+		exit 1 ; \
+	fi
+endif
+
+
+%.o : %.c libft.h
+	@echo "\033[31;1m• \033[0mCreating object file $@ ...\033[55G\c"
+	@export result=`$(CC) $(CFLAGS) -c $< -o $@ 2>&1` ; \
+	if [ "$$result" = "" ] ; then \
+		echo "\033[37;1m[\033[32mOK !\033[37m]\033[0m" ; \
+	else \
+		echo "\033[37;1m[\033[31mFAIL\033[37m]\033[0m" ; \
+		echo "\n$$result" ; \
+		exit 1 ; \
+	fi
+
+fast:
+	@make -C . FAST=1
+
+clean :
+	@echo "\033[31;1m• \033[0mRemoving object files ...\033[55G\c"
+	@rm -rf $(OBJ)
+	@echo "\033[37;1m[\033[32mOK !\033[37m]\033[0m"
+
+fclean : clean
+	@echo "\033[31;1m• \033[0mRemoving $(NAME) ...\033[55G\c"
+	@rm -rf $(NAME)
+	@echo "\033[37;1m[\033[32mOK !\033[37m]\033[0m"
+
+mrproper: fclean
+
+re : fclean all

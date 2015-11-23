@@ -131,23 +131,4 @@ void *ht_get( hashtable_t *hashtable, const char * key ) {
 	} else {
 		return pair->value;
 	}
-	
 }
-
-
-// int main( int argc, char **argv ) {
-
-// 	hashtable_t *hashtable = ht_create( 65536 );
-
-// 	ht_set( hashtable, "key1", strdup("inky"));
-// 	ht_set( hashtable, "key2", strdup("pinky"));
-// 	ht_set( hashtable, "key3", strdup("blinky"));
-// 	ht_set( hashtable, "key4", strdup("floyd"));
-
-// 	printf( "%s\n", ht_get( hashtable, "key1" ) );
-// 	printf( "%s\n", ht_get( hashtable, "key2" ) );
-// 	printf( "%s\n", ht_get( hashtable, "key3" ) );
-// 	printf( "%s\n", ht_get( hashtable, "key4" ) );
-
-// 	return 0;
-// }
