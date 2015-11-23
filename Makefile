@@ -52,8 +52,8 @@ OBJS	=	$(SRCS:.c=.o)
 all: $(NAME)
 
 LIBRARIES:
-	make -C libft
-	make -C htable
+	@make -C libft
+	@make -C htable
 
 $(NAME): LIBRARIES $(OBJS)
 	$(CC) $(CCFLAGS) $(INC) $(OBJS) -o $(NAME) $(LIBS) -O3
@@ -62,12 +62,12 @@ $(NAME): LIBRARIES $(OBJS)
 	$(CC) $(CCFLAGS) -c  $(INC) $< -o $@
 	
 clean:
-	make clean -C libft
-	make clean -C htable
+	@make clean -C libft
+	@make clean -C htable
 	rm -f $(OBJS)
 	
 fclean:	clean
 	rm -f $(NAME)
 
 re: fclean all
-	make re -C minilibx_macos
+	make

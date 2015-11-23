@@ -10,7 +10,7 @@
 #                                                                              #
 #******************************************************************************#
 
-.PHONY: all, clean, fclean, mrproper, re, fast
+.PHONY: all, clean, fclean, mrproper, re, fast, .SILENT
 
 CC = clang
 NAME = htable.a
@@ -82,3 +82,5 @@ fclean : clean
 mrproper: fclean
 
 re : fclean all
+
+.SILENT:
