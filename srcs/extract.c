@@ -1,5 +1,6 @@
 #include <lemins.h>
 #include <htable.h>
+#include <stdio.h>
 
 static int		clear_line(const char *str)
 {
@@ -52,12 +53,27 @@ static void		extract_cell(t_maze * const maze, char *str)
 		++str;
 	if (!(*str >= '0' && *str <= '9'))
 	{
-		maze->keep_reading = B_FALSE;
+		maze_error(maze, "First value of the cell is not a number");
 		return ;
 	}
 	maze->pos_y = ft_atoi(str);
-	maze->analyse = B_TRUE;
-	maze->second_cell = NULL;
+	while (*str == ' ' || *str == '\t')
+		++str;
+	if (*str == '-' || *str == '+')
+	{
+		++str;
+		while (*str == ' ' || *str == '\t')
+			++str;
+	}
+	while (*str >= '0' && *str <= '9')
+		++str;
+	if (*str)
+		maze_error(maze, "Second value of the cell is not a number");
+	else
+	{
+		maze->analyse = B_TRUE;
+		maze->second_cell = NULL;
+	}
 }
 
 static void	extract_command(t_maze * const maze, const char *str)
@@ -84,7 +100,7 @@ static void	extract_command(t_maze * const maze, const char *str)
 		}
 	}
 }
-#include <stdio.h>
+
 void	extract_data(t_maze * const maze, char *str)
 {
 	maze->analyse = B_FALSE;
@@ -112,7 +128,6 @@ void	extract_data(t_maze * const maze, char *str)
 		if (*str == '-')
 		{
 			maze->analysing = LINKS;
-			maze->keep_reading = B_FALSE;
 			extract_link(maze, str);
 		}
 		else

@@ -21,6 +21,7 @@ static t_maze	*init_maze(const char * const path)
 	maze->cell_kind = NORMAL;
 	maze->start = NULL;
 	maze->end = NULL;
+	// maze->verbose = B_FALSE;
 	maze->verbose = B_TRUE;
 	return (maze);
 }
