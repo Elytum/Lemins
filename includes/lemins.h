@@ -14,8 +14,13 @@ typedef union		s_double_int {
 
 typedef enum		s_bool {
 	B_FALSE = 0,
-	B_TRUE = 1
+	B_TRUE
 }					e_bool;
+
+typedef enum		s_analyse {
+	CELLS = 0,
+	LINKS
+}					e_analyse;
 
 typedef enum		s_cell_kind {
 	NORMAL = 0,
@@ -25,6 +30,7 @@ typedef enum		s_cell_kind {
 
 typedef struct		s_maze
 {
+	e_analyse		analysing;
 	int				fd;
 
 	hashtable_t		*cells;

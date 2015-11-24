@@ -84,7 +84,7 @@ static void	extract_command(t_maze * const maze, const char *str)
 		}
 	}
 }
-
+#include <stdio.h>
 void	extract_data(t_maze * const maze, char *str)
 {
 	maze->analyse = B_FALSE;
@@ -107,8 +107,22 @@ void	extract_data(t_maze * const maze, char *str)
 		++str;
 	if (!*str || *str == '#')
 		return ;
-	if (*str == '-')
-		extract_link(maze, str);
+	if (maze->analysing == CELLS)
+	{
+		if (*str == '-')
+		{
+			maze->analysing = LINKS;
+			maze->keep_reading = B_FALSE;
+			extract_link(maze, str);
+		}
+		else
+			extract_cell(maze, str);
+	}
 	else
-		extract_cell(maze, str);
+	{
+		if (*str != '-')
+			maze->analyse = B_FALSE;
+		else
+			extract_link(maze, str);
+	}
 }

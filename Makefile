@@ -10,23 +10,6 @@
 #                                                                              #
 # **************************************************************************** #
 
-
-# Bonus 1 : DONE
-#	export
-
-# Bonus 2 : DONE
-#	unset
-#	bye
-
-# Bonus 3
-#	pwd
-
-# Bonus 4
-#	eval
-
-# Bonus 5
-#	
-
 # -------------Compilateur------------------#
 CC		=	gcc
 #--------------Name-------------------------#
@@ -47,7 +30,7 @@ OBJS	=	$(SRCS:.c=.o)
 
 #--------------Actions----------------------#
 
-.PHONY: LIBRARIES $(NAME) clean fclean re
+.PHONY: LIBRARIES $(NAME) clean fclean re test
 
 all: $(NAME)
 
@@ -71,3 +54,7 @@ fclean:	clean
 
 re: fclean all
 	make
+
+test: all
+	clear
+	./$(NAME) map.lemin

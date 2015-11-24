@@ -14,6 +14,7 @@ static t_maze	*init_maze(const char * const path)
 		return (NULL);
 	if (!(maze = (t_maze *)malloc(sizeof(t_maze))))
 		return (NULL);
+	maze->analysing = CELLS;
 	maze->fd = fd;
 	maze->keep_reading = B_TRUE;
 	maze->cells = ht_create( 65536 );
