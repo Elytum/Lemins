@@ -28,6 +28,12 @@ typedef enum		s_cell_kind {
 	END
 }					e_cell_kind;
 
+typedef struct		s_bonus
+{
+	e_bool			verbose;
+	e_bool			same_line_comments;
+}					t_bonus;
+
 typedef struct		s_maze
 {
 	e_analyse		analysing;
@@ -47,7 +53,7 @@ typedef struct		s_maze
 	int				pos_x;
 	int				pos_y;
 
-	e_bool			verbose;
+	t_bonus			bonus;
 }					t_maze;
 
 #define DO_READ(maze) (maze->keep_reading == B_TRUE)
@@ -57,6 +63,9 @@ typedef struct		s_maze
 
 void		extract_data(t_maze * const maze, char *str);
 void		analyse_data(t_maze * const maze);
-void		maze_error(t_maze * const maze, const char str[]);
 
+void		maze_message(t_maze * const maze, const char str[]);
+void		maze_cell(t_maze * const maze, const char name[], const int x, const int y);
+void		maze_link(t_maze * const maze, const char first_cell[], const char second_cell[]);
+void		maze_error(t_maze * const maze, const char str[]);
 #endif

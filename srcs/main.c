@@ -1,8 +1,5 @@
-#include <stdio.h>
-
 #include <lemins.h>
 #include <libft.h>
-
 #include <fcntl.h>
 
 static t_maze	*init_maze(const char * const path)
@@ -21,8 +18,8 @@ static t_maze	*init_maze(const char * const path)
 	maze->cell_kind = NORMAL;
 	maze->start = NULL;
 	maze->end = NULL;
-	// maze->verbose = B_FALSE;
-	maze->verbose = B_TRUE;
+	maze->bonus.verbose = B_TRUE; // B_FALSE
+	maze->bonus.same_line_comments = B_TRUE; // B_FALSE
 	return (maze);
 }
 

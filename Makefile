@@ -18,8 +18,8 @@ MYPATH	=	$(HOME)
 #--------------Sources----------------------#
 FILES	=	main.c					\
 			analyse.c				\
-			errors.c				\
-			extract.c
+			extract.c				\
+			verbose.c
 
 INC		=	-I ./includes -I ./libft -I ./htable
 LIBS	=	libft/libft.a htable/htable.a

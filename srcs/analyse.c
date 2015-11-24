@@ -1,6 +1,7 @@
+#include <lemins.h>
+
 #include <stdio.h>
 
-#include <lemins.h>
 
 static void		tell_cell(t_maze * const maze, const char * const name)
 {
@@ -9,7 +10,7 @@ static void		tell_cell(t_maze * const maze, const char * const name)
 	if (!(double_int.total = ht_get(maze->cells, name)))
 		maze_error(maze, "Cell adding failed !");
 	else
-		dprintf(1, "Cell [%s] is added in [%i/%i]\n", name, double_int.array[0], double_int.array[1]);
+		maze_cell(maze, name, double_int.array[0], double_int.array[1]);
 }
 
 static void		add_cell(t_maze * const maze)
@@ -52,7 +53,7 @@ static void		analyze_link(t_maze * const maze)
 	if (maze->cell_kind != NORMAL)
 		maze_error(maze, "Link while it should be a cell !");
 	else
-		dprintf(1, "Cell [%s] is linked with cell [%s]\n", maze->first_cell, maze->second_cell);
+		maze_link(maze, maze->first_cell, maze->second_cell);
 }
 
 void			analyse_data(t_maze * const maze)

@@ -1,6 +1,5 @@
 #include <lemins.h>
 #include <htable.h>
-#include <stdio.h>
 
 static int		clear_line(const char *str)
 {
@@ -47,7 +46,6 @@ static void		extract_cell(t_maze * const maze, char *str)
 	if (!(*str >= '0' && *str <= '9'))
 	{
 		maze_error(maze, "First value of the cell is not a number");
-		maze->keep_reading = B_FALSE;
 		return ;
 	}
 	while (*str >= '0' && *str <= '9')
@@ -71,7 +69,7 @@ static void		extract_cell(t_maze * const maze, char *str)
 	}
 	while (*str == ' ' || *str == '\t')
 		++str;
-	if (*str)
+	if (*str && !(maze->bonus.same_line_comments == B_TRUE && *str == '#'))
 		maze_error(maze, "Line is not closed");
 	else
 	{
