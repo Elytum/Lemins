@@ -10,6 +10,7 @@
 typedef union		s_double_int {
 	void			*total;
 	int				array[2];
+	double			value;
 }					u_double_int;
 
 typedef enum		s_bool {
@@ -61,8 +62,16 @@ typedef struct		s_maze
 #define IS_CELL(maze) (maze->second_cell == NULL)
 #define IS_LINK(maze) (maze->second_cell != NULL)
 
-void		extract_data(t_maze * const maze, char *str);
-void		analyse_data(t_maze * const maze);
+u_double_int		extract_data(t_maze * const maze, char *str);
+void				analyse_data(t_maze * const maze);
+
+typedef enum		s_error {
+	B_FALSE = 0,
+	B_TRUE
+}					e_error;
+
+u_double_int	error(enum error, int fragments);
+u_double_int	no_error(void);
 
 void		maze_message(t_maze * const maze, const char str[]);
 void		maze_cell(t_maze * const maze, const char name[], const int x, const int y);

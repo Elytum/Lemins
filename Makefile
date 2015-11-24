@@ -19,6 +19,7 @@ MYPATH	=	$(HOME)
 FILES	=	main.c					\
 			analyse.c				\
 			extract.c				\
+			errors.c				\
 			verbose.c
 
 INC		=	-I ./includes -I ./libft -I ./htable

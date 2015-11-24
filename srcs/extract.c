@@ -103,28 +103,28 @@ static void	extract_command(t_maze * const maze, const char *str)
 	}
 }
 
-void	extract_data(t_maze * const maze, char *str)
+u_double_int	extract_data(t_maze * const maze, char *str)
 {
 	maze->analyse = B_FALSE;
 	if (str[0] == '#' && str[1] == '#')
 	{
 		extract_command(maze, str + 2);
-		return ;
+		return (no_error());
 	}
 	while (*str == ' ' || *str == '\t')
 		++str;
 	if (*str == '#')
-		return ;
+		return (no_error());
 	if (*str == 'L')
 	{
 		maze->keep_reading = B_FALSE;
-		return ;
+		return (no_error());
 	}
 	maze->first_cell = (void *)str;
 	while (*str && *str != ' ' && *str != '\t' && *str != '-' && *str != '#')
 		++str;
 	if (!*str || *str == '#')
-		return ;
+		return (no_error());
 	if (maze->analysing == CELLS)
 	{
 		if (*str == '-')
@@ -142,4 +142,5 @@ void	extract_data(t_maze * const maze, char *str)
 		else
 			extract_link(maze, str);
 	}
+	return (no_error());
 }
