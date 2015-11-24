@@ -2,6 +2,12 @@
 #include <libft.h>
 #include <fcntl.h>
 
+static void		init_bonus(t_maze *maze)
+{
+	maze->bonus.verbose = B_TRUE; // B_FALSE
+	maze->bonus.same_line_comments = B_TRUE; // B_FALSE
+}
+
 static t_maze	*init_maze(const char * const path)
 {
 	t_maze	*maze;
@@ -18,8 +24,7 @@ static t_maze	*init_maze(const char * const path)
 	maze->cell_kind = NORMAL;
 	maze->start = NULL;
 	maze->end = NULL;
-	maze->bonus.verbose = B_TRUE; // B_FALSE
-	maze->bonus.same_line_comments = B_TRUE; // B_FALSE
+	init_bonus(maze);
 	return (maze);
 }
 
