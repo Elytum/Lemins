@@ -41,34 +41,38 @@ static void		extract_cell(t_maze * const maze, char *str)
 	*str++ = '\0';
 	while (*str == ' ' || *str == '\t')
 		++str;
-	if (!(*str >= '0' && *str <= '9'))
-	{
-		maze->keep_reading = B_FALSE;
-		return ;
-	}
 	maze->pos_x = ft_atoi(str);
-	while (*str >= '0' && *str <= '9')
-		++str;
-	while (*str == ' ' || *str == '\t')
+	if (*str == '-' || *str == '+')
 		++str;
 	if (!(*str >= '0' && *str <= '9'))
 	{
 		maze_error(maze, "First value of the cell is not a number");
+		maze->keep_reading = B_FALSE;
 		return ;
-	}
-	maze->pos_y = ft_atoi(str);
-	while (*str == ' ' || *str == '\t')
-		++str;
-	if (*str == '-' || *str == '+')
-	{
-		++str;
-		while (*str == ' ' || *str == '\t')
-			++str;
 	}
 	while (*str >= '0' && *str <= '9')
 		++str;
-	if (*str)
+	while (*str == ' ' || *str == '\t')
+		++str;
+	maze->pos_y = ft_atoi(str);
+	if (*str == '-' || *str == '+')
+		++str;
+	if (!(*str >= '0' && *str <= '9'))
+	{
 		maze_error(maze, "Second value of the cell is not a number");
+		return ;
+	}
+	while (*str >= '0' && *str <= '9')
+		++str;
+	if (*str && *str != ' ' && *str != '\t')
+	{
+		maze_error(maze, "Second value of the cell is not a number");
+		return ;
+	}
+	while (*str == ' ' || *str == '\t')
+		++str;
+	if (*str)
+		maze_error(maze, "Line is not closed");
 	else
 	{
 		maze->analyse = B_TRUE;
