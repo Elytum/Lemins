@@ -65,12 +65,12 @@ typedef struct		s_maze
 u_double_int		extract_data(t_maze * const maze, char *str);
 void				analyse_data(t_maze * const maze);
 
-typedef enum		s_error {
-	B_FALSE = 0,
-	B_TRUE
-}					e_error;
+// typedef enum		s_error {
+// 	B_FALSE = 0,
+// 	B_TRUE
+// }					e_error;
 
-u_double_int	error(enum error, int fragments);
+// u_double_int	error(enum error, int fragments);
 u_double_int	no_error(void);
 
 void		maze_message(t_maze * const maze, const char str[]);

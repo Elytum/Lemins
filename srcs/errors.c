@@ -8,11 +8,11 @@ u_double_int	no_error(void)
 	return (error);
 }
 
-u_double_int	error(enum error, int fragments)
-{
-	u_double_int	error;
+// u_double_int	error(enum error, int fragments)
+// {
+// 	u_double_int	error;
 
-	error.array[0] = error;
-	error.array[1] = fragments;
-	return (error);
-}
+// 	error.array[0] = error;
+// 	error.array[1] = fragments;
+// 	return (error);
+// }
