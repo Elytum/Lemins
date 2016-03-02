@@ -1,0 +1,9 @@
+Exception: STATUS_ACCESS_VIOLATION at eip=61138F13
+eax=20390030 ebx=20390030 ecx=00000000 edx=20390030 esi=00000000 edi=20390030
+ebp=0028C968 esp=0028C964 program=C:\Users\Elytum\.babun\cygwin\home\Elytum\lemin\lem_in.exe, pid 8440, thread main
+cs=0023 ds=002B es=002B fs=0053 gs=002B ss=002B
+Stack trace:
+Frame     Function  Args
+0028C968  61138F13 (20390030, 0028CA14, 004040A3, 00000001)
+0028CA94  61145416 (61086DB0, 8004A5E0, 00000101, 0028CAD8)
+End of stack trace

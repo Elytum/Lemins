@@ -16,13 +16,10 @@ CC		=	gcc
 NAME	=	lem_in
 MYPATH	=	$(HOME)
 #--------------Sources----------------------#
-FILES	=	main.c					\
-			analyse.c				\
-			extract.c				\
-			errors.c				\
-			verbose.c
+FILES	=	main.c		\
+			vector.c
 
-INC		=	-I ./includes -I ./libft -I ./htable
+INC		=	-I./includes -I ./libft/includes -I ./htable
 LIBS	=	libft/libft.a htable/htable.a
 CCFLAGS	=	-Wall -Wextra -Werror -g
 

@@ -14,9 +14,13 @@ typedef struct			hashtable_s {
 }						hashtable_t;
 
 hashtable_t		*ht_create( int size );
-int				ht_hash( hashtable_t *hashtable, const char *key );
+int				ht_hash( hashtable_t *hashtable, char *key );
 entry_t			*ht_newpair( char *key, void *value );
 void			ht_set( hashtable_t *hashtable, char *key, void *value );
-void			*ht_get( hashtable_t *hashtable, const char *key );
+void			*ht_get( hashtable_t *hashtable, char *key );
+entry_t			*ht_get_pair( hashtable_t *hashtable, char *key );
+void			ht_remove( hashtable_t *hashtable, char *key );
+void			ht_free(hashtable_t *hashtable);
+void			ht_clear(hashtable_t *hashtable);
 
 #endif

@@ -30,7 +30,7 @@ hashtable_t *ht_create( int size ) {
 }
 
 /* Hash a string for a particular hash table. */
-int ht_hash( hashtable_t *hashtable, const char *key ) {
+int ht_hash( hashtable_t *hashtable, char *key ) {
 
 	unsigned long int hashval;
 	unsigned long int i;
@@ -66,6 +66,62 @@ entry_t *ht_newpair( char *key, void *value ) {
 	newpair->next = NULL;
 
 	return newpair;
+}
+
+#include <stdio.h>
+void	ht_free(hashtable_t *hashtable)
+{
+	int			i;
+	entry_t		*ptr;
+	entry_t		*next;
+
+	i = 0;
+	while (i < hashtable->size)
+	{
+		if (!(ptr = hashtable->table[i++]))
+		{
+			if (i >= hashtable->size)
+				return ;
+			continue ;
+		}
+		// dprintf(1, "\tStart of while with %i\n", i - 1);
+		while (ptr != NULL && ptr->key != NULL)
+		{
+		// dprintf(1, "Removing: [%s] [%s]\n", ptr->key, ptr->value);
+			next = ptr->next;
+			free(ptr->key);
+			free(ptr->value);
+			free(ptr);
+			ptr = next;
+		}
+	}
+	free(hashtable->table);
+	free(hashtable);
+}
+
+void	ht_clear(hashtable_t *hashtable)
+{
+	int			i;
+	entry_t		*ptr;
+	entry_t		*next;
+
+	i = hashtable->size; // !!! 0
+	while (i < hashtable->size)
+	{
+		if (!(ptr = hashtable->table[i++]))
+			continue ;
+		next = ptr->next;
+		free(ptr->key);
+		free(ptr->value);
+		ptr = next;
+		while (ptr != NULL && ptr->key != NULL) {
+			next = ptr->next;
+			free(ptr->key);
+			free(ptr->value);
+			free(ptr);
+			ptr = next;
+		}
+	}
 }
 
 /* Insert a key-value pair into a hash table. */
@@ -112,7 +168,7 @@ void ht_set( hashtable_t *hashtable, char *key, void *value ) {
 }
 
 /* Retrieve a key-value pair from a hash table. */
-void *ht_get( hashtable_t *hashtable, const char * key ) {
+void 	*ht_get( hashtable_t *hashtable, char *key ) {
 	int bin = 0;
 	entry_t *pair;
 
@@ -130,5 +186,58 @@ void *ht_get( hashtable_t *hashtable, const char * key ) {
 
 	} else {
 		return pair->value;
+	}
+}
+
+/* Retrieve a key-value pair from a hash table. */
+entry_t 	*ht_get_pair( hashtable_t *hashtable, char *key ) {
+	int bin = 0;
+	entry_t *pair;
+
+	bin = ht_hash( hashtable, key );
+
+	/* Step through the bin, looking for our value. */
+	pair = hashtable->table[ bin ];
+	while( pair != NULL && pair->key != NULL && strcmp( key, pair->key ) > 0 ) {
+		pair = pair->next;
+	}
+
+	/* Did we actually find anything? */
+	if( pair == NULL || pair->key == NULL || strcmp( key, pair->key ) != 0 ) {
+		return NULL;
+
+	} else {
+		return pair;
+	}
+}
+
+void			ht_remove( hashtable_t *hashtable, char *key )
+{
+	int bin = 0;
+	entry_t *pair;
+	entry_t *old;
+
+	bin = ht_hash( hashtable, key );
+
+	/* Step through the bin, looking for our value. */
+	pair = hashtable->table[ bin ];
+	old = NULL;
+	while( pair != NULL && pair->key != NULL && strcmp( key, pair->key ) > 0 ) {
+		old = pair;
+		pair = pair->next;
+	}
+
+	/* Did we actually find anything? */
+	if( pair == NULL || pair->key == NULL || strcmp( key, pair->key ) != 0 ) {
+		return ;
+
+	} else {
+		if (old)
+			old->next = pair->next;
+		free(pair->key);
+		free(pair->value);
+		free(pair);
+		if (!old)
+			hashtable->table[ bin ] = NULL;
 	}
 }

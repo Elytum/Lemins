@@ -10,13 +10,13 @@
 #                                                                              #
 #******************************************************************************#
 
-NAME = htable
+NAME = vector
 
-SRC = htable.c
+SRC = vector.c
 
 OBJ = $(SRC:.c=.o)
 
-LIBNAME = htable.a
+LIBNAME = vector.a
 
 FLAGS = -Wall -Werror -Wextra
 

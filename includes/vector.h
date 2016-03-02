@@ -12,6 +12,7 @@ typedef struct 	s_vector
 }				t_vector;
 
 t_vector		create_vector(size_t size);
+t_vector		*new_vector(size_t size);
 void			free_vector(t_vector *vector);
 void			add_vector(t_vector *vector, void *data);
 void			*get_vector(t_vector vector, size_t position);
