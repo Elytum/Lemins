@@ -17,7 +17,6 @@ typedef struct		s_map
 	t_vector		*solution;
 	t_vector		*solutions;
 	size_t			len;
-	int				direct;
 }					t_map;
 
 #define IS_START    0b10000000
@@ -71,14 +70,6 @@ int		check_link(char *line, t_map *map)
 	if (!(pairs[0] = ht_get_pair(map->cells, linked[0])) ||
 		!(pairs[1] = ht_get_pair(map->cells, linked[1])))
 		return (0);
-	if (pairs[0]->key == pairs[1]->key)
-		return (1);
-	if ((pairs[0]->key == map->start || pairs[0]->key == map->end) &&
-		(pairs[1]->key == map->start || pairs[1]->key == map->end))
-	{
-		map->direct = 1;
-		return (1);
-	}
 	add_vector(pairs[0]->value, pairs[1]->key);
 	add_vector(pairs[1]->value, pairs[0]->key);
 	return (1);
@@ -129,6 +120,7 @@ int		check_cell(char *line, char *flag, t_map *map)
 		return (0);
 	if (ht_get(map->cells, name))
 		return (0);
+	printf("Name: [%s] %p\n", name, name);
 	if (*flag & IS_START)
 	{
 		map->start = name;
@@ -143,6 +135,7 @@ int		check_cell(char *line, char *flag, t_map *map)
 	}
 	ht_set(map->cells, name, new_vector(sizeof(char *)));
 	add_vector(map->list, name);
+	printf("\t->%p\n", ht_get_pair(map->cells, name)->key);
 	++map->size;
 	return (1);
 }
@@ -171,12 +164,18 @@ void	save_solution(t_map *map)
 	i = 0;
 	map->len = map->working_list->len;
 	map->solution->len = 0;
+	printf("Saving solution:\n");
 	while (i < map->working_list->len)
 	{
 		if ((tmp = get_vector(*(map->working_list), i)))
+		{
+			printf("\t%s\n", tmp);
 			add_vector(map->solution, tmp);
+		}
 		++i;
 	}
+	add_vector(map->solution, map->start);
+	add_vector(map->solution, map->end);
 }
 
 int		solve(t_map *map, char *cell, size_t level);
@@ -190,19 +189,25 @@ void	solve_iterate(t_map *map, t_vector *vector, size_t level)
 
 	i = 0;
 	tmp_pos = add_vector(map->working_list, NULL);
+	printf("\t\tTmp_pos: %zu\n", tmp_pos);
 	while (i < vector->len)
 	{
 		tmp = get_vector(*vector, i);
-		if (in_vector(*(map->list), tmp) &&
-			!in_vector(*(map->working_list), tmp))
+		if (!in_vector(*(map->working_list), tmp))
 		{
+			printf("Testing cell: %s\n", (char *)tmp);
 			set_vector(map->working_list, tmp, tmp_pos);
+			printf("\t%s\n", (char *)get_vector(*(map->working_list), tmp_pos));
 			if (solve(map, tmp, level + 1))
 				break ;
 		}
 		++i;
 	}
 	--map->working_list->len;
+	(void)tmp_pos;
+	(void)vector;
+	(void)tmp;
+	(void)i;
 }
 
 	//Look for END cell
@@ -240,78 +245,47 @@ void	tell_solution(t_map *map)
 		printf("\t%s\n", (char *)get_vector(*(map->solution), i++));
 }
 
-void	tell_solutions(t_map *map)
-{
-	size_t		i;
-	// t_vector	*test = get_vector(*(map->solutions), map->solutions->len - 1);
-	t_vector	*test = get_vector(*(map->solutions), 0);
-	size_t		ants = 3;
-	size_t		first_step = 0;
-	size_t		last_step = 0;
-	size_t		save_ants = ants;
-	size_t		max;
-
-	while (ants)
-	{
-		++first_step;
-		i = (test->len > last_step) ? last_step : test->len;
-		max = (test->len > first_step) ? first_step : test->len;
-		if (first_step > test->len)
-			printf("L%zu-%s ", first_step - max, map->end);
-		while (i < max)
-		{
-			// printf("L%zu-%s ", first_step - i, (char *)get_vector(*test, max - i - 1));
-			printf("L%zu-%s ", first_step - (max - i) + 1, (char *)get_vector(*test, max - i - 1));
-			++i;
-		}
-		printf("\n");
-		if (first_step > test->len)
-			--ants;
-		if (first_step >= save_ants)
-			++last_step;
-	}
-}
-
 void	remove_used(t_map *map)
 {
 	size_t	i;
 	void	*tmp;
 
-	tmp = map->working_list;
-	map->working_list = map->list;
-	map->list = tmp;
-	map->list->len = 0;
+	map->working_list->len = 0;
 	i = 0;
-	while (i < map->working_list->len)
+	while (i < map->list->len)
 	{
-		tmp = get_vector(*(map->working_list), i);
+		tmp = get_vector(*(map->list), i);
 		if (!in_vector(*(map->solution), tmp))
-			add_vector(map->list, tmp);
+			add_vector(map->working_list, tmp);
 		++i;
 	}
+	map->list->len = 0;
+	i = 0;
+	while (i < map->list->len)
+		add_vector(map->list, get_vector(*(map->list), i++));
 }
 
 void	solve_master(t_map *map)
 {
 	map->solutions = new_vector(sizeof(t_vector *));
-	map->working_list = new_vector(sizeof(char *));
 	while (42)
 	{
-		map->len = map->list->len;
-		map->working_list->len = 0;
+		map->len = map->size + 1;
+		map->working_list = new_vector(sizeof(char *));
 		map->solution = new_vector(sizeof(char *));
 		solve(map, map->start, 1);
-		if (map->solution->len == 0)
+		if (map->solution->len = 0)
 		{
 			free_vector(map->solution);
-			break;
+			break ;
 		}
-		// tell_solution(map);
-		add_vector(map->solutions, map->solution);
-		remove_used(map);
+		else
+		{
+			tell_solution(map);
+			add_vector(map->solutions, map->solution);
+			remove_used(map);
+		}
 	}
-	if (map->solutions->len)
-		tell_solutions(map);
 }
 
 int		main(void)
@@ -324,8 +298,7 @@ int		main(void)
 	map.cells = ht_create(2048);
 	map.size = 0;
 	map.list = new_vector(sizeof(char *));
-	map.direct = 0;
-	if ((fd = open("./sample/map2", 'r')) == -1)
+	if ((fd = open("./sample/map", 'r')) == -1)
 		return (1);
 	while (get_next_line(fd, &line) == 1)
 	{
