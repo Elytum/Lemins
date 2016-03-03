@@ -12,6 +12,11 @@ typedef struct		s_map
 	char			*end;
 	hashtable_t		*cells;
 	size_t			size;
+	t_vector		*list;
+	t_vector		*working_list;
+	t_vector		*solution;
+	t_vector		*solutions;
+	size_t			len;
 }					t_map;
 
 #define IS_START    0b10000000
@@ -129,6 +134,7 @@ int		check_cell(char *line, char *flag, t_map *map)
 		*flag |= HAVE_END;
 	}
 	ht_set(map->cells, name, new_vector(sizeof(char *)));
+	add_vector(map->list, name);
 	printf("\t->%p\n", ht_get_pair(map->cells, name)->key);
 	++map->size;
 	return (1);
@@ -150,25 +156,135 @@ char	analyze_line(char *line, t_map *map)
 	return (1);
 }
 
-void	solve(t_map map)
+void	save_solution(t_map *map)
 {
-	size_t		i;
-	char		*cell;
-	t_vector	*vector;
+	size_t	i;
+	char	*tmp;
 
-	cell = map.start;
-	printf("Start: [%s], end: [%s]\n", map.start, map.end);
-	vector = ht_get(map.cells, cell);
+	i = 0;
+	map->len = map->working_list->len;
+	map->solution->len = 0;
+	printf("Saving solution:\n");
+	while (i < map->working_list->len)
+	{
+		if ((tmp = get_vector(*(map->working_list), i)))
+		{
+			printf("\t%s\n", tmp);
+			add_vector(map->solution, tmp);
+		}
+		++i;
+	}
+	add_vector(map->solution, map->start);
+	add_vector(map->solution, map->end);
+}
+
+int		solve(t_map *map, char *cell, size_t level);
+
+	//Iterate though unknown cells
+void	solve_iterate(t_map *map, t_vector *vector, size_t level)
+{
+	size_t	i;
+	void	*tmp;
+	size_t	tmp_pos;
+
+	i = 0;
+	tmp_pos = add_vector(map->working_list, NULL);
+	printf("\t\tTmp_pos: %zu\n", tmp_pos);
+	while (i < vector->len)
+	{
+		tmp = get_vector(*vector, i);
+		if (!in_vector(*(map->working_list), tmp))
+		{
+			printf("Testing cell: %s\n", (char *)tmp);
+			set_vector(map->working_list, tmp, tmp_pos);
+			printf("\t%s\n", (char *)get_vector(*(map->working_list), tmp_pos));
+			if (solve(map, tmp, level + 1))
+				break ;
+		}
+		++i;
+	}
+	--map->working_list->len;
+	(void)tmp_pos;
+	(void)vector;
+	(void)tmp;
+	(void)i;
+}
+
+	//Look for END cell
+int		solve(t_map *map, char *cell, size_t level)
+{
+	t_vector	*vector;
+	size_t		i;
+
+	if (level >= map->len)
+		return (1);
+	vector = ht_get(map->cells, cell);
+	if (!vector->len)
+		return (0);
 	i = 0;
 	while (i < vector->len)
 	{
-		if (get_vector(*vector, i) == map.end)
-			printf ("DONE\n");
-		else
-			printf ("Cell [%s]\n", (char *)get_vector(*vector, i));
+		if (get_vector(*vector, i) == map->end)
+		{
+			save_solution(map);
+			return (1);
+		}
 		++i;
 	}
-	(void)map;
+	solve_iterate(map, vector, level);
+	return (0);
+}
+
+void	tell_solution(t_map *map)
+{
+	size_t	i;
+
+	printf("Solution: (%zu)\n", map->solution->len);
+	i = 0;
+	while (i < map->solution->len)
+		printf("\t%s\n", (char *)get_vector(*(map->solution), i++));
+}
+
+void	remove_used(t_map *map)
+{
+	size_t	i;
+	void	*tmp;
+
+	map->working_list->len = 0;
+	i = 0;
+	while (i < map->list->len)
+	{
+		tmp = get_vector(*(map->list), i);
+		if (!in_vector(*(map->solution), tmp))
+			add_vector(map->working_list, tmp);
+		++i;
+	}
+	map->list->len = 0;
+	i = 0;
+	while (i < map->list->len)
+		add_vector(map->list, get_vector(*(map->list), i++));
+}
+
+void	solve_master(t_map *map)
+{
+	map->solutions = new_vector(sizeof(t_vector *));
+	while (42)
+	{
+		map->len = map->size + 1;
+		map->working_list = new_vector(sizeof(char *));
+		map->solution = new_vector(sizeof(char *));
+		if (!(solve(map, map->start, 1)))
+		{
+			tell_solution(map);
+			free_vector(map->solution);
+			break ;
+		}
+		else
+		{
+			add_vector(map->solutions, map->solution);
+			remove_used(map);
+		}
+	}
 }
 
 int		main(void)
@@ -179,6 +295,8 @@ int		main(void)
 
 	line = NULL;
 	map.cells = ht_create(2048);
+	map.size = 0;
+	map.list = new_vector(sizeof(char *));
 	if ((fd = open("./sample/map", 'r')) == -1)
 		return (1);
 	while (get_next_line(fd, &line) == 1)
@@ -189,7 +307,7 @@ int		main(void)
 		free(line);
 	}
 	if (map.start && map.end)
-		solve(map);
+		solve_master(&map);
 	else
 		printf("Missing start or end\n");
 	return (1);
