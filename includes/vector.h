@@ -17,6 +17,7 @@ void			free_vector(t_vector *vector);
 size_t			add_vector(t_vector *vector, void *data);
 void			set_vector(t_vector *vector, void *data, size_t position);
 void			*get_vector(t_vector vector, size_t position);
+void			**get_vector_addr(t_vector vector, size_t position);
 int				in_vector(t_vector vector, void *data);
 
 #endif

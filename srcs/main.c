@@ -20,6 +20,20 @@ typedef struct		s_map
 	int				direct;
 }					t_map;
 
+typedef struct	s_ant
+{
+	char		**path;
+}				t_ant;
+
+typedef struct	s_path
+{
+	char		**begin;
+	size_t		len;
+	size_t		ants;
+}				t_path;
+
+#define MAX(a,b) ({ __typeof__ (a) _a = (a); __typeof__ (b) _b = (b); _a > _b ? _a : _b; })
+
 #define IS_START    0b10000000
 #define IS_END      0b01000000
 #define HAVE_START  0b00100000
@@ -240,35 +254,112 @@ void	tell_solution(t_map *map)
 		printf("\t%s\n", (char *)get_vector(*(map->solution), i++));
 }
 
+t_path			*generate_paths(size_t ants_nb, t_map *map)
+{
+	size_t		total;
+	size_t		i;
+	size_t		remain;
+	t_vector	*ptr;
+	t_path		*paths;
+
+	if (!(paths = (t_path *)malloc(sizeof(t_path) * map->solutions->len + 1)))
+	{
+		printf("Error\n");
+		return (paths);
+	}
+	total = 0;
+	i = 0;
+	while (i < map->solutions->len)
+	{
+		ptr = (t_vector *)get_vector(*map->solutions, i);
+		paths[i].begin = (char **)get_vector_addr(*ptr, 0);
+		paths[i].len = ptr->len;
+		total += ptr->len;
+		++i;
+	}
+	paths[i].begin = NULL;
+	remain = 0;
+	i = 0;
+	total *= ants_nb;
+	while (paths[i].begin)
+	{
+		paths[i].ants = total / paths[i].len + remain;
+		remain += total % paths[i].len;
+		++i;
+	}
+	paths[0].ants += remain;
+	return (paths);
+}
+
+void	solution_push_ants(size_t *id, t_path *paths, t_ant *ants)
+{
+	size_t			i;
+
+	i = 0;
+	while (paths[i].begin)
+	{
+		if (paths[i].ants)
+		{
+			ants[*id].path = paths[i].begin;
+			++(*id);
+			--paths[i].ants;
+		}
+		++i;
+	}
+}
+
+void	update_ants(size_t *ants_nb, size_t nb_ants, t_ant *ants)
+{
+	size_t	i;
+	char	updated = 0;
+
+	i = 0;
+	while (i < nb_ants)
+	{
+		if (ants[i].path)
+		{
+			if (updated)
+				printf(" L%zu-%s", i + 1, *ants[i].path++);
+			else
+				printf("L%zu-%s", i + 1, *ants[i].path++);
+			updated = 1;
+			if (!*ants[i].path)
+			{
+				--*ants_nb;
+				ants[i].path = NULL;
+			}
+		}
+		++i;
+	}
+	printf("\n");
+	(void)ants_nb;
+	(void)ants;
+}
+
 void	tell_solutions(t_map *map)
 {
-	size_t		i;
-	// t_vector	*test = get_vector(*(map->solutions), map->solutions->len - 1);
-	t_vector	*test = get_vector(*(map->solutions), 0);
-	size_t		ants = 3;
-	size_t		first_step = 0;
-	size_t		last_step = 0;
-	size_t		save_ants = ants;
-	size_t		max;
+	size_t			ants_nb = 3;
+	const size_t	save_nb = ants_nb;
+	size_t			id;
+	t_ant			*ants;
+	t_path			*paths;
 
-	while (ants)
+	if (!(paths = generate_paths(ants_nb, map)))
 	{
-		++first_step;
-		i = (test->len > last_step) ? last_step : test->len;
-		max = (test->len > first_step) ? first_step : test->len;
-		if (first_step > test->len)
-			printf("L%zu-%s ", first_step - max, map->end);
-		while (i < max)
-		{
-			// printf("L%zu-%s ", first_step - i, (char *)get_vector(*test, max - i - 1));
-			printf("L%zu-%s ", first_step - (max - i) + 1, (char *)get_vector(*test, max - i - 1));
-			++i;
-		}
-		printf("\n");
-		if (first_step > test->len)
-			--ants;
-		if (first_step >= save_ants)
-			++last_step;
+		printf("Error\n");
+		return ;
+	}
+	if (!(ants = (t_ant *)ft_memalloc(sizeof(t_ant) * ants_nb)))
+	{
+		free(paths);
+		printf("Error\n");
+		return ;
+	}
+	id = 0;
+	while (ants_nb)
+	{
+		solution_push_ants(&id, paths, ants);
+		update_ants(&ants_nb, save_nb, ants);
 	}
 }
 
@@ -306,7 +397,8 @@ void	solve_master(t_map *map)
 			free_vector(map->solution);
 			break;
 		}
-		// tell_solution(map);
+		add_vector(map->solution, map->end);
+		add_vector(map->solution, NULL);
 		add_vector(map->solutions, map->solution);
 		remove_used(map);
 	}
@@ -325,7 +417,7 @@ int		main(void)
 	map.size = 0;
 	map.list = new_vector(sizeof(char *));
 	map.direct = 0;
-	if ((fd = open("./sample/map2", 'r')) == -1)
+	if ((fd = open("./sample/map2", O_RDONLY)) == -1)
 		return (1);
 	while (get_next_line(fd, &line) == 1)
 	{

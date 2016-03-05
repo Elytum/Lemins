@@ -75,6 +75,13 @@ void			*get_vector(t_vector vector, size_t position)
 	return (*tmp);
 }
 
+void			**get_vector_addr(t_vector vector, size_t position)
+{
+	if (position > vector.len)
+		return (NULL);
+	return (vector.content + vector.size * position);
+}
+
 int				in_vector(t_vector vector, void *data)
 {
 	size_t		i;

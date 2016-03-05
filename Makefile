@@ -52,7 +52,3 @@ fclean:	clean
 
 re: fclean all
 	make
-
-test: all
-	clear
-	./$(NAME) map.lemin
