@@ -8,6 +8,7 @@
 
 typedef struct		s_map
 {
+	size_t			ants_nb;
 	char			*start;
 	char			*end;
 	hashtable_t		*cells;
@@ -338,28 +339,27 @@ void	update_ants(size_t *ants_nb, size_t nb_ants, t_ant *ants)
 
 void	tell_solutions(t_map *map)
 {
-	size_t			ants_nb = 3;
-	const size_t	save_nb = ants_nb;
+	const size_t	save_nb = map->ants_nb;
 	size_t			id;
 	t_ant			*ants;
 	t_path			*paths;
 
-	if (!(paths = generate_paths(ants_nb, map)))
+	if (!(paths = generate_paths((map->ants_nb), map)))
 	{
 		printf("Error\n");
-		return ;
+		exit(1);
 	}
-	if (!(ants = (t_ant *)ft_memalloc(sizeof(t_ant) * ants_nb)))
+	if (!(ants = (t_ant *)ft_memalloc(sizeof(t_ant) * (map->ants_nb))))
 	{
 		free(paths);
 		printf("Error\n");
-		return ;
+		exit(1);
 	}
 	id = 0;
-	while (ants_nb)
+	while ((map->ants_nb))
 	{
 		solution_push_ants(&id, paths, ants);
-		update_ants(&ants_nb, save_nb, ants);
+		update_ants(&(map->ants_nb), save_nb, ants);
 	}
 }
 
@@ -397,18 +397,43 @@ void	solve_master(t_map *map)
 			free_vector(map->solution);
 			break;
 		}
+		remove_used(map);
 		add_vector(map->solution, map->end);
 		add_vector(map->solution, NULL);
 		add_vector(map->solutions, map->solution);
-		remove_used(map);
 	}
 	if (map->solutions->len)
 		tell_solutions(map);
 }
 
+int		extract_nb_ants(t_map *map)
+{
+	char	*line;
+	char	*ptr;
+
+	if (get_next_line(0, &line) != 1 || *line < '0' || *line > '9')
+	{
+		printf("%s\n", line);
+		write(1, "Error 0\n", 8);
+		return (0);
+	}
+	ptr = line;
+	while (*ptr)
+	{
+		if (*ptr < '0' || *ptr > '9')
+		{
+			write(1, "Error 1\n", 8);
+			return (0);
+		}
+		++ptr;
+	}
+	map->ants_nb = ft_atoi(line);
+	free(line);
+	return (1);
+}
+
 int		main(void)
 {
-	int		fd;
 	char	*line;
 	t_map	map;
 
@@ -417,15 +442,17 @@ int		main(void)
 	map.size = 0;
 	map.list = new_vector(sizeof(char *));
 	map.direct = 0;
-	if ((fd = open("./sample/map2", O_RDONLY)) == -1)
+	map.ants_nb = 3;
+	if (!extract_nb_ants(&map))
 		return (1);
-	while (get_next_line(fd, &line) == 1)
+	while (get_next_line(0, &line) == 1)
 	{
-		line[strlen(line) - 1] = '\0';
+		printf("%s\n", line);
 		if (!analyze_line(line, &map))
 			break ;
 		free(line);
 	}
+	printf("\n");
 	if (map.start && map.end)
 		solve_master(&map);
 	else
