@@ -17,7 +17,13 @@ NAME	=	lem_in
 MYPATH	=	$(HOME)
 #--------------Sources----------------------#
 FILES	=	main.c		\
-			vector.c
+			vector.c	\
+			vector2.c	\
+			solve.c		\
+			tell.c		\
+			error.c		\
+			parser.c	\
+			parser2.c
 
 INC		=	-I./includes -I ./libft/includes -I ./htable
 LIBS	=	libft/libft.a htable/htable.a
@@ -50,5 +56,7 @@ clean:
 fclean:	clean
 	rm -f $(NAME)
 
-re: fclean all
+re: fclean
+	make re -C libft
+	make re -C htable
 	make
