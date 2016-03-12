@@ -59,6 +59,8 @@ static void		solve_master(t_map *map)
 	}
 	if (map->solutions->len)
 		tell_solutions(map);
+	else
+		write(1, "Error\n", 6);
 }
 
 static int		extract_nb_ants(t_map *map)
@@ -78,7 +80,6 @@ static int		extract_nb_ants(t_map *map)
 		{
 			if (*ptr == '\n')
 				break ;
-			printf("\tError 1 '%i' %i [%s]\n", *ptr, *ptr == '\n', line);
 			return (0);
 		}
 		++ptr;
@@ -93,10 +94,9 @@ int				main(void)
 	char		*line;
 	t_map		map;
 
+	bzero(&map, sizeof(map));
 	map.cells = ht_create(2048);
-	map.size = 0;
 	map.list = new_vector(sizeof(char *));
-	map.direct = 0;
 	map.ants_nb = 3;
 	if (!extract_nb_ants(&map))
 		return (1);
