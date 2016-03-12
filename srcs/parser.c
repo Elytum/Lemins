@@ -14,6 +14,7 @@
 #include <htable.h>
 #include <lemins.h>
 #include <vector.h>
+#include <stdio.h>
 
 static void	*get_name(char *line)
 {
@@ -45,18 +46,25 @@ static void	*get_name(char *line)
 
 static int	check_comment(char *line, char *flag)
 {
+	// printf("Check comment\n");
 	if (line[0] == '#')
 	{
 		if (!ft_strcmp(line + 1, "start"))
 		{
 			if (*flag & HAVE_START)
+			{
+				printf("Test 1\n");
 				return (0);
+			}
 			*flag |= IS_START;
 		}
 		else if (!ft_strcmp(line + 1, "end"))
 		{
 			if (*flag & HAVE_END)
+			{
+				printf("Test 2\n");
 				return (0);
+			}
 			*flag |= IS_END;
 		}
 	}
@@ -69,24 +77,37 @@ static int	check_link(char *line, t_map *map)
 	entry_t	*pairs[2];
 	char	*delimiter;
 
+	// printf("Check link\n");
 	if (!(delimiter = ft_strchr(line, '-')))
+	{
+		printf("Test 0\n");
 		return (0);
+	}
 	*delimiter = '\0';
 	linked[0] = line;
 	linked[1] = delimiter + 1;
 	if (!(pairs[0] = ht_get_pair(map->cells, linked[0])) ||
 		!(pairs[1] = ht_get_pair(map->cells, linked[1])))
+	{
+		printf("Test [%s] [%s]\n", linked[0], linked[1]);
+		printf("%p %p\n", pairs[0], pairs[1]);
 		return (0);
+	}
 	if (pairs[0]->key == pairs[1]->key)
+	{
+		printf("Test 3\n");
 		return (1);
+	}
 	if ((pairs[0]->key == map->start || pairs[0]->key == map->end) &&
 		(pairs[1]->key == map->start || pairs[1]->key == map->end))
 	{
 		map->direct = 1;
+		printf("Test 1\n");
 		return (1);
 	}
 	add_vector(pairs[0]->value, pairs[1]->key);
 	add_vector(pairs[1]->value, pairs[0]->key);
+	// printf("Ok\n");
 	return (1);
 }
 
@@ -94,11 +115,12 @@ static int	check_cell(char *line, char *flag, t_map *map)
 {
 	char	*name;
 
+	// printf("Check cell\n");
 	if (!(name = get_name(line)) || ht_get(map->cells, name))
 		return (0);
 	if (*flag & IS_START && *flag & IS_END)
 	{
-		write(1, "\nError\n", 7);
+		write(1, "\nError 2\n", 9);
 		exit(1);
 	}
 	if (*flag & IS_START)

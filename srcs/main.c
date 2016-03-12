@@ -60,7 +60,7 @@ static void		solve_master(t_map *map)
 	if (map->solutions->len || map->direct)
 		tell_solutions(map);
 	else
-		write(1, "Error\n", 6);
+		write(1, "Error 1\n", 8);
 }
 
 static int		extract_nb_ants(t_map *map)
@@ -70,7 +70,7 @@ static int		extract_nb_ants(t_map *map)
 
 	if (get_next_line(0, &line) != 1 || *line < '0' || *line > '9')
 	{
-		write(1, "Error 0\n", 8);
+		write(1, "Error 3\n", 8);
 		return (0);
 	}
 	ptr = line;
@@ -113,6 +113,6 @@ int				main(void)
 	if (map.start && map.end)
 		solve_master(&map);
 	else
-		write(1, "Error\n", 6);
+		write(1, "Error 0\n", 8);
 	return (1);
 }

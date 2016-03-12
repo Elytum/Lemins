@@ -47,6 +47,10 @@ void					ht_set(hashtable_t *hashtable, char *key, void *value)
 	last = NULL;
 	newpair = NULL;
 	bin = ht_hash(hashtable, key);
+
+	// if (!ft_strcmp(key, "284"))
+	// 	dprintf(1, "\t\t0: [%i]\n", bin);
+
 	next = hashtable->table[bin];
 	if (!(last = ht_fln(&next, key, value)))
 		return ;
@@ -62,6 +66,7 @@ void					ht_set(hashtable_t *hashtable, char *key, void *value)
 		if (next)
 			newpair->next = next;
 	}
+	ht_get(hashtable, key);
 }
 
 void					*ht_get(hashtable_t *hashtable, char *key)
@@ -86,8 +91,14 @@ entry_t					*ht_get_pair(hashtable_t *hashtable, char *key)
 
 	bin = ht_hash(hashtable, key);
 	pair = hashtable->table[bin];
+	if (!ft_strcmp(key, "284"))
+		dprintf(1, "\t\t0: [%i]\n", bin);
 	while (pair != NULL && pair->key != NULL && ft_strcmp(key, pair->key) > 0)
+	{
+		if (!ft_strcmp(key, "284"))
+			dprintf(1, "\tTesting [%s]\n", pair->key);
 		pair = pair->next;
+	}
 	if (pair == NULL || pair->key == NULL || ft_strcmp(key, pair->key) != 0)
 		return (NULL);
 	else
