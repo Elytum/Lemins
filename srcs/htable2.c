@@ -15,16 +15,9 @@
 #include <limits.h>
 #include <libft.h>
 
-void					ht_set(hashtable_t *hashtable, char *key, void *value)
+entry_t					*ht_fln(entry_t *next, const char *key, void *value)
 {
-	int					bin ;
-	entry_t				*newpair = NULL;
-	entry_t				*next = NULL;
-	entry_t				*last = NULL;
-
-	bin = ht_hash(hashtable, key);
-
-	next = hashtable->table[bin];
+	entry_t				*last;
 
 	while (next != NULL && next->key != NULL && ft_strcmp(key, next->key) > 0)
 	{
@@ -35,21 +28,33 @@ void					ht_set(hashtable_t *hashtable, char *key, void *value)
 	{
 		free(next->value);
 		next->value = value;
+		return (NULL);
+	}
+	return (last);
+}
+
+void					ht_set(hashtable_t *hashtable, char *key, void *value)
+{
+	int					bin;
+	entry_t				*newpair;
+	entry_t				*next;
+	entry_t				*last;
+
+	bin = ht_hash(hashtable, key);
+	if (!(last = ht_fln(hashtable->table[bin], key, value)))
+		return ;
+	next = last->next;
+	newpair = ht_newpair(key, value);
+	if (next == hashtable->table[bin])
+	{
+		newpair->next = next;
+		hashtable->table[bin] = newpair;
 	}
 	else
 	{
-		newpair = ht_newpair(key, value);
-		if (next == hashtable->table[bin])
-		{
+		last->next = newpair;
+		if (next)
 			newpair->next = next;
-			hashtable->table[bin] = newpair;
-		}
-		else
-		{
-			last->next = newpair;
-			if (next)
-				newpair->next = next;
-		}
 	}
 }
 
@@ -92,12 +97,12 @@ void					ht_remove(hashtable_t *hashtable, char *key)
 	bin = ht_hash(hashtable, key);
 	pair = hashtable->table[bin];
 	old = NULL;
-	while (pair != NULL && pair->key != NULL && ft_strcmp(key, pair->key) > 0 )
+	while (pair != NULL && pair->key != NULL && ft_strcmp(key, pair->key) > 0)
 	{
 		old = pair;
 		pair = pair->next;
 	}
-	if (pair == NULL || pair->key == NULL || ft_strcmp(key, pair->key) != 0 )
+	if (pair == NULL || pair->key == NULL || ft_strcmp(key, pair->key) != 0)
 		return ;
 	else
 	{

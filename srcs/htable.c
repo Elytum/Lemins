@@ -24,12 +24,12 @@ hashtable_t				*ht_create(int size)
 	if (size < 1 ||
 		(hashtable = malloc(sizeof(hashtable_t))) == NULL ||
 		(hashtable->table = malloc(sizeof(entry_t *) * size)) == NULL)
-		return NULL;
+		return (NULL);
 	i = 0;
 	while (i < size)
 		hashtable->table[i++] = NULL;
 	hashtable->size = size;
-	return (hashtable);	
+	return (hashtable);
 }
 
 int						ht_hash(hashtable_t *hashtable, char *key)
@@ -47,14 +47,14 @@ int						ht_hash(hashtable_t *hashtable, char *key)
 	return (hashval % hashtable->size);
 }
 
-entry_t					*ht_newpair( char *key, void *value )
+entry_t					*ht_newpair(char *key, void *value)
 {
 	entry_t				*newpair;
 
 	if ((newpair = malloc(sizeof(entry_t))) == NULL ||
 		(newpair->key = key) == NULL ||
-		(newpair->value = value) == NULL )
-		return NULL;
+		(newpair->value = value) == NULL)
+		return (NULL);
 	newpair->next = NULL;
 	return (newpair);
 }
@@ -93,7 +93,7 @@ void					ht_clear(hashtable_t *hashtable)
 	entry_t				*ptr;
 	entry_t				*next;
 
-	i = hashtable->size; // !!! 0
+	i = hashtable->size;
 	while (i < hashtable->size)
 	{
 		if (!(ptr = hashtable->table[i++]))
@@ -102,7 +102,8 @@ void					ht_clear(hashtable_t *hashtable)
 		free(ptr->key);
 		free(ptr->value);
 		ptr = next;
-		while (ptr != NULL && ptr->key != NULL) {
+		while (ptr != NULL && ptr->key != NULL)
+		{
 			next = ptr->next;
 			free(ptr->key);
 			free(ptr->value);
