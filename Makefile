@@ -24,7 +24,7 @@ FILES	=	main.c		\
 			vector2.c	\
 			htable.c
 
-INC		=	-I./includes -I ./libft/includes
+INC		=	-I./includes -I ./libft
 LIBS	=	libft/libft.a
 CCFLAGS	=	-Wall -Wextra -Werror -g
 

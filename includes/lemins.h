@@ -42,6 +42,5 @@ typedef struct	s_path
 int			solve(t_map *map, char *cell, size_t level);
 char		analyze_line(char *line, t_map *map);
 void		tell_solutions(t_map *map);
-// void		error(const char *str);
 
 #endif

@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <limits.h>
+#include <libft.h>
 
 hashtable_t				*ht_create(int size)
 {
@@ -27,11 +28,10 @@ int						ht_hash(hashtable_t *hashtable, char *key)
 
 	hashval = 0;
 	i = 0;
-	while (hashval < ULONG_MAX && i < strlen(key))
+	while (hashval < ULONG_MAX && i < ft_strlen(key))
 	{
 		hashval = hashval << 8;
-		hashval += key[ i ];
-		i++;
+		hashval += key[i++];
 	}
 	return (hashval % hashtable->size);
 }
@@ -108,16 +108,16 @@ void 					ht_set(hashtable_t *hashtable, char *key, void *value)
 	entry_t				*next = NULL;
 	entry_t				*last = NULL;
 
-	bin = ht_hash( hashtable, key );
+	bin = ht_hash(hashtable, key);
 
-	next = hashtable->table[ bin ];
+	next = hashtable->table[bin];
 
-	while (next != NULL && next->key != NULL && strcmp(key, next->key) > 0)
+	while (next != NULL && next->key != NULL && ft_strcmp(key, next->key) > 0)
 	{
 		last = next;
 		next = next->next;
 	}
-	if (next != NULL && next->key != NULL && strcmp(key, next->key) == 0)
+	if (next != NULL && next->key != NULL && ft_strcmp(key, next->key) == 0)
 	{
 		free(next->value);
 		next->value = value;
@@ -128,7 +128,7 @@ void 					ht_set(hashtable_t *hashtable, char *key, void *value)
 		if (next == hashtable->table[bin])
 		{
 			newpair->next = next;
-			hashtable->table[ bin ] = newpair;
+			hashtable->table[bin] = newpair;
 		}
 		else
 		{
@@ -144,11 +144,11 @@ void 					*ht_get(hashtable_t *hashtable, char *key)
 	int					bin;
 	entry_t				*pair;
 
-	bin = ht_hash( hashtable, key );
-	pair = hashtable->table[ bin ];
-	while (pair != NULL && pair->key != NULL && strcmp(key, pair->key) > 0)
+	bin = ht_hash(hashtable, key);
+	pair = hashtable->table[bin];
+	while (pair != NULL && pair->key != NULL && ft_strcmp(key, pair->key) > 0)
 		pair = pair->next;
-	if (pair == NULL || pair->key == NULL || strcmp(key, pair->key) != 0)
+	if (pair == NULL || pair->key == NULL || ft_strcmp(key, pair->key) != 0)
 		return NULL;
 	else
 		return pair->value;
@@ -159,11 +159,11 @@ entry_t 				*ht_get_pair(hashtable_t *hashtable, char *key)
 	int					bin;
 	entry_t				*pair;
 
-	bin = ht_hash( hashtable, key );
-	pair = hashtable->table[ bin ];
-	while (pair != NULL && pair->key != NULL && strcmp(key, pair->key) > 0)
+	bin = ht_hash(hashtable, key);
+	pair = hashtable->table[bin];
+	while (pair != NULL && pair->key != NULL && ft_strcmp(key, pair->key) > 0)
 		pair = pair->next;
-	if (pair == NULL || pair->key == NULL || strcmp(key, pair->key) != 0)
+	if (pair == NULL || pair->key == NULL || ft_strcmp(key, pair->key) != 0)
 		return NULL;
 	else
 		return pair;
@@ -178,12 +178,12 @@ void					ht_remove(hashtable_t *hashtable, char *key)
 	bin = ht_hash(hashtable, key);
 	pair = hashtable->table[bin];
 	old = NULL;
-	while (pair != NULL && pair->key != NULL && strcmp(key, pair->key) > 0 )
+	while (pair != NULL && pair->key != NULL && ft_strcmp(key, pair->key) > 0 )
 	{
 		old = pair;
 		pair = pair->next;
 	}
-	if (pair == NULL || pair->key == NULL || strcmp(key, pair->key) != 0 )
+	if (pair == NULL || pair->key == NULL || ft_strcmp(key, pair->key) != 0 )
 		return ;
 	else
 	{

@@ -14,7 +14,6 @@
 #include <htable.h>
 #include <stdio.h>
 #include <libft.h>
-#include <get_next_line.h>
 #include <fcntl.h>
 #include <string.h>
 #include <lemins.h>
@@ -69,7 +68,6 @@ static int		extract_nb_ants(t_map *map)
 
 	if (get_next_line(0, &line) != 1 || *line < '0' || *line > '9')
 	{
-		printf("%s\n", line);
 		write(1, "Error 0\n", 8);
 		return (0);
 	}
@@ -95,7 +93,6 @@ int				main(void)
 	char		*line;
 	t_map		map;
 
-	line = NULL;
 	map.cells = ht_create(2048);
 	map.size = 0;
 	map.list = new_vector(sizeof(char *));
@@ -105,15 +102,16 @@ int				main(void)
 		return (1);
 	while (get_next_line(0, &line) == 1)
 	{
-		printf("%s\n", line);
+		write(1, line, ft_strlen(line));
+		write(1, "\n", 1);
 		if (!analyze_line(line, &map))
 			break ;
 		free(line);
 	}
-	printf("\n");
+	write(1, "\n", 1);
 	if (map.start && map.end)
 		solve_master(&map);
 	else
-		printf("Missing start or end\n");
+		write(1, "Error\n", 6);
 	return (1);
 }
