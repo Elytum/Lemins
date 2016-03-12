@@ -27,7 +27,7 @@ FILES	=	main.c		\
 
 INC		=	-I./includes -I ./libft
 LIBS	=	libft/libft.a
-CCFLAGS	=	-Wall -Wextra -Werror
+CCFLAGS	=	-Wall -Wextra -Werror -g -O3
 
 SRCS	=	$(addprefix srcs/, $(FILES))
 OBJS	=	$(SRCS:.c=.o)

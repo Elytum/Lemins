@@ -15,19 +15,23 @@
 #include <limits.h>
 #include <libft.h>
 
-entry_t					*ht_fln(entry_t *next, const char *key, void *value)
+#include <stdio.h>
+
+static entry_t			*ht_fln(entry_t **next, const char *key, void *value)
 {
 	entry_t				*last;
 
-	while (next != NULL && next->key != NULL && ft_strcmp(key, next->key) > 0)
+	while ((*next) != NULL && (*next)->key != NULL &&
+				ft_strcmp(key, (*next)->key) > 0)
 	{
-		last = next;
-		next = next->next;
+		last = (*next);
+		(*next) = (*next)->next;
 	}
-	if (next != NULL && next->key != NULL && ft_strcmp(key, next->key) == 0)
+	if ((*next) != NULL && (*next)->key != NULL &&
+				ft_strcmp(key, (*next)->key) == 0)
 	{
-		free(next->value);
-		next->value = value;
+		free((*next)->value);
+		(*next)->value = value;
 		return (NULL);
 	}
 	return (last);
@@ -40,10 +44,12 @@ void					ht_set(hashtable_t *hashtable, char *key, void *value)
 	entry_t				*next;
 	entry_t				*last;
 
+	last = NULL;
+	newpair = NULL;
 	bin = ht_hash(hashtable, key);
-	if (!(last = ht_fln(hashtable->table[bin], key, value)))
+	next = hashtable->table[bin];
+	if (!(last = ht_fln(&next, key, value)))
 		return ;
-	next = last->next;
 	newpair = ht_newpair(key, value);
 	if (next == hashtable->table[bin])
 	{

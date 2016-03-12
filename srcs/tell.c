@@ -25,16 +25,15 @@ static t_path		*generate_paths2(size_t total, t_path *paths)
 
 	i = 0;
 	while (paths[i].begin)
-	{
-		paths[i].ants = 0;
-		++i;
-	}
+		paths[i++].ants = 0;
 	extra = total;
 	while (extra)
 	{
 		i = 0;
 		remain = 0;
 		total = extra;
+		paths[0].ants += remain;
+		extra -= remain;
 		while (paths[i].begin && extra)
 		{
 			tmp = total / paths[i].len + remain;
@@ -42,10 +41,6 @@ static t_path		*generate_paths2(size_t total, t_path *paths)
 			extra -= tmp;
 			remain = total % paths[i++].len;
 		}
-		if (!extra)
-			return (paths);
-		paths[0].ants += remain;
-		extra -= remain;
 	}
 	return (paths);
 }
