@@ -68,7 +68,10 @@ static t_path		*generate_paths(size_t ants_nb, t_map *map)
 		++i;
 	}
 	paths[i].begin = NULL;
-	return (generate_paths2(ants_nb, paths));
+	if (map->solutions->len > 1)
+		return (generate_paths2(ants_nb, paths));
+	paths[0].ants = ants_nb;
+	return (paths);
 }
 
 static void			solution_push_ants(size_t *id, t_path *paths, t_ant *ants)

@@ -5,8 +5,8 @@
 
 typedef struct 	s_vector
 {
-	size_t		size;
 	void		*content;
+	size_t		size;
 	size_t		len;
 	size_t		max;
 }				t_vector;

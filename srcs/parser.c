@@ -20,6 +20,8 @@ static void	*get_name(char *line)
 	char	*ptr;
 	char	loop;
 
+	if (*line == 'L')
+		return (NULL);
 	loop = 2;
 	if ((ptr = line + ft_strlen(line) - 1) <= line)
 		return (NULL);
@@ -57,8 +59,6 @@ static int	check_comment(char *line, char *flag)
 				return (0);
 			*flag |= IS_END;
 		}
-		else
-			return (0);
 	}
 	return (1);
 }
@@ -94,10 +94,13 @@ static int	check_cell(char *line, char *flag, t_map *map)
 {
 	char	*name;
 
-	if (!(name = get_name(line)))
+	if (!(name = get_name(line)) || ht_get(map->cells, name))
 		return (0);
-	if (ht_get(map->cells, name))
-		return (0);
+	if (*flag & IS_START && *flag & IS_END)
+	{
+		write(1, "\nError\n", 7);
+		exit(1);
+	}
 	if (*flag & IS_START)
 	{
 		map->start = name;

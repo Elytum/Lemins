@@ -57,7 +57,7 @@ static void		solve_master(t_map *map)
 		add_vector(map->solution, NULL);
 		add_vector(map->solutions, map->solution);
 	}
-	if (map->solutions->len)
+	if (map->solutions->len || map->direct)
 		tell_solutions(map);
 	else
 		write(1, "Error\n", 6);
