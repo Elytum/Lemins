@@ -19,10 +19,10 @@
 #include <string.h>
 #include <lemins.h>
 
-void		remove_used(t_map *map)
+static void		remove_used(t_map *map)
 {
-	size_t	i;
-	void	*tmp;
+	size_t		i;
+	void		*tmp;
 
 	tmp = map->working_list;
 	map->working_list = map->list;
@@ -38,7 +38,7 @@ void		remove_used(t_map *map)
 	}
 }
 
-void		solve_master(t_map *map)
+static void		solve_master(t_map *map)
 {
 	map->solutions = new_vector(sizeof(t_vector *));
 	map->working_list = new_vector(sizeof(char *));
@@ -62,10 +62,10 @@ void		solve_master(t_map *map)
 		tell_solutions(map);
 }
 
-int			extract_nb_ants(t_map *map)
+static int		extract_nb_ants(t_map *map)
 {
-	char	*line;
-	char	*ptr;
+	char		*line;
+	char		*ptr;
 
 	if (get_next_line(0, &line) != 1 || *line < '0' || *line > '9')
 	{
@@ -90,10 +90,10 @@ int			extract_nb_ants(t_map *map)
 	return (1);
 }
 
-int			main(void)
+int				main(void)
 {
-	char	*line;
-	t_map	map;
+	char		*line;
+	t_map		map;
 
 	line = NULL;
 	map.cells = ht_create(2048);

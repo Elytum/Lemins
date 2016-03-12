@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-t_path				*generate_paths2(size_t total, t_path *paths)
+static t_path		*generate_paths2(size_t total, t_path *paths)
 {
 	size_t			i;
 	size_t			remain;
@@ -33,7 +33,7 @@ t_path				*generate_paths2(size_t total, t_path *paths)
 	return (paths);
 }
 
-t_path				*generate_paths(size_t ants_nb, t_map *map)
+static t_path		*generate_paths(size_t ants_nb, t_map *map)
 {
 	size_t			total;
 	size_t			i;
@@ -41,7 +41,10 @@ t_path				*generate_paths(size_t ants_nb, t_map *map)
 	t_path			*paths;
 
 	if (!(paths = (t_path *)malloc(sizeof(t_path) * map->solutions->len + 1)))
-		error("Error\n");
+	{
+		write(1, "Malloc error\n", 13);
+		exit(0);
+	}
 	total = 0;
 	i = 0;
 	while (i < map->solutions->len)
@@ -56,7 +59,7 @@ t_path				*generate_paths(size_t ants_nb, t_map *map)
 	return (generate_paths2(total * ants_nb, paths));
 }
 
-void				solution_push_ants(size_t *id, t_path *paths, t_ant *ants)
+static void			solution_push_ants(size_t *id, t_path *paths, t_ant *ants)
 {
 	size_t			i;
 
@@ -73,18 +76,7 @@ void				solution_push_ants(size_t *id, t_path *paths, t_ant *ants)
 	}
 }
 
-void				put_ant(size_t id, const char *name, char space)
-{
-	if (space)
-		write(1, " ", 1);
-	write(1, "L", 1);
-	ft_putnbr(id);
-	write(1, "-", 1);
-	write(1, name, ft_strlen(name));
-
-}
-
-void				update_ants(size_t *ants_nb, size_t nb_ants, t_ant *ants)
+static void			update_ants(size_t *ants_nb, size_t nb_ants, t_ant *ants)
 {
 	size_t			i;
 	char			updated;
@@ -95,11 +87,11 @@ void				update_ants(size_t *ants_nb, size_t nb_ants, t_ant *ants)
 	{
 		if (ants[i].path)
 		{
-			put_ant(i + 1, *ants[i].path++, updated);
-			// if (updated)
-			// 	printf(" L%zu-%s", i + 1, *ants[i].path++);
-			// else
-			// 	printf("L%zu-%s", i + 1, *ants[i].path++);
+			(updated) ? write(1, " L", 2) : write(1, "L", 1);
+			ft_putnbr(i + 1);
+			write(1, "-", 1);
+			write(1, *ants[i].path, ft_strlen(*ants[i].path));
+			ants[i].path++;
 			updated = 1;
 			if (!*ants[i].path)
 			{
@@ -119,12 +111,19 @@ void				tell_solutions(t_map *map)
 	t_ant			*ants;
 	t_path			*paths;
 
-	if (!(paths = generate_paths((map->ants_nb), map)))
-		error("Error\n");
-	if (!(ants = (t_ant *)ft_memalloc(sizeof(t_ant) * (map->ants_nb))))
+	if (map->direct == 1)
+	{
+		map->solution = new_vector(sizeof(char *));
+		add_vector(map->solution, map->end);
+		add_vector(map->solution, NULL);
+		add_vector(map->solutions, map->solution);
+	}
+	if (!(paths = generate_paths((map->ants_nb), map)) ||
+		!(ants = (t_ant *)ft_memalloc(sizeof(t_ant) * (map->ants_nb))))
 	{
 		free(paths);
-		error("Error\n");
+		write(1, "Malloc error\n", 13);
+		exit(0);
 	}
 	id = 0;
 	while ((map->ants_nb))

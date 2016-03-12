@@ -235,15 +235,15 @@ int		solve(t_map *map, char *cell, size_t level)
 	return (0);
 }
 
-void	tell_solution(t_map *map)
-{
-	size_t	i;
+// void	tell_solution(t_map *map)
+// {
+// 	size_t	i;
 
-	printf("Solution: (%zu)\n", map->solution->len);
-	i = 0;
-	while (i < map->solution->len)
-		printf("\t%s\n", (char *)get_vector(*(map->solution), i++));
-}
+// 	printf("Solution: (%zu)\n", map->solution->len);
+// 	i = 0;
+// 	while (i < map->solution->len)
+// 		printf("\t%s\n", (char *)get_vector(*(map->solution), i++));
+// }
 
 void	remove_used(t_map *map)
 {
@@ -281,7 +281,7 @@ void	solve_master(t_map *map)
 		}
 		else
 		{
-			tell_solution(map);
+			// tell_solution(map);
 			add_vector(map->solutions, map->solution);
 			remove_used(map);
 		}

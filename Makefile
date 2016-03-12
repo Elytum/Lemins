@@ -17,16 +17,15 @@ NAME	=	lem_in
 MYPATH	=	$(HOME)
 #--------------Sources----------------------#
 FILES	=	main.c		\
-			vector.c	\
-			vector2.c	\
 			solve.c		\
 			tell.c		\
-			error.c		\
 			parser.c	\
-			parser2.c
+			vector.c	\
+			vector2.c	\
+			htable.c
 
-INC		=	-I./includes -I ./libft/includes -I ./htable
-LIBS	=	libft/libft.a htable/htable.a
+INC		=	-I./includes -I ./libft/includes
+LIBS	=	libft/libft.a
 CCFLAGS	=	-Wall -Wextra -Werror -g
 
 SRCS	=	$(addprefix srcs/, $(FILES))
@@ -40,7 +39,6 @@ all: $(NAME)
 
 LIBRARIES:
 	@make -C libft
-	@make -C htable
 
 $(NAME): LIBRARIES $(OBJS)
 	$(CC) $(CCFLAGS) $(INC) $(OBJS) -o $(NAME) $(LIBS) -O3
@@ -50,7 +48,6 @@ $(NAME): LIBRARIES $(OBJS)
 	
 clean:
 	@make clean -C libft
-	@make clean -C htable
 	rm -f $(OBJS)
 	
 fclean:	clean
@@ -58,5 +55,4 @@ fclean:	clean
 
 re: fclean
 	make re -C libft
-	make re -C htable
 	make

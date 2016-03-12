@@ -14,10 +14,10 @@
 #include <htable.h>
 #include <stdio.h>
 
-void	save_solution(t_map *map)
+static void		save_solution(t_map *map)
 {
-	size_t	i;
-	char	*tmp;
+	size_t		i;
+	char		*tmp;
 
 	i = 0;
 	map->len = map->working_list->len;
@@ -30,11 +30,11 @@ void	save_solution(t_map *map)
 	}
 }
 
-void	solve_iterate(t_map *map, t_vector *vector, size_t level)
+static void		solve_iterate(t_map *map, t_vector *vector, size_t level)
 {
-	size_t	i;
-	void	*tmp;
-	size_t	tmp_pos;
+	size_t		i;
+	void		*tmp;
+	size_t		tmp_pos;
 
 	i = 0;
 	tmp_pos = add_vector(map->working_list, NULL);
@@ -53,7 +53,7 @@ void	solve_iterate(t_map *map, t_vector *vector, size_t level)
 	--map->working_list->len;
 }
 
-int		solve(t_map *map, char *cell, size_t level)
+int				solve(t_map *map, char *cell, size_t level)
 {
 	t_vector	*vector;
 	size_t		i;
@@ -75,14 +75,4 @@ int		solve(t_map *map, char *cell, size_t level)
 	}
 	solve_iterate(map, vector, level);
 	return (0);
-}
-
-void	tell_solution(t_map *map)
-{
-	size_t	i;
-
-	printf("Solution: (%zu)\n", map->solution->len);
-	i = 0;
-	while (i < map->solution->len)
-		printf("\t%s\n", (char *)get_vector(*(map->solution), i++));
 }

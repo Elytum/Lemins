@@ -39,15 +39,9 @@ typedef struct	s_path
 #define HAVE_END    0b00010000
 #define CELLS_DONE  0b00001000
 
-int			get_names(char *line, char *linked[2]);
-void		*get_name(char *line);
-char		analyze_line(char *line, t_map *map);
-
-void		save_solution(t_map *map);
-void		solve_iterate(t_map *map, t_vector *vector, size_t level);
 int			solve(t_map *map, char *cell, size_t level);
-void		tell_solution(t_map *map);
+char		analyze_line(char *line, t_map *map);
 void		tell_solutions(t_map *map);
-void		error(const char *str);
+// void		error(const char *str);
 
 #endif
