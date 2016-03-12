@@ -20,16 +20,19 @@ static t_path		*generate_paths2(size_t total, t_path *paths)
 {
 	size_t			i;
 	size_t			remain;
+	size_t			extra;	
 
 	i = 0;
 	remain = 0;
+	extra = total;
 	while (paths[i].begin)
 	{
 		paths[i].ants = total / paths[i].len + remain;
-		remain += total % paths[i].len;
+		extra -= paths[i].ants;
+		remain = total % paths[i].len;
 		++i;
 	}
-	paths[0].ants += remain;
+	paths[0].ants += remain + extra;
 	return (paths);
 }
 
@@ -40,7 +43,7 @@ static t_path		*generate_paths(size_t ants_nb, t_map *map)
 	t_vector		*ptr;
 	t_path			*paths;
 
-	if (!(paths = (t_path *)malloc(sizeof(t_path) * map->solutions->len + 1)))
+	if (!(paths = (t_path *)malloc(sizeof(t_path) * (map->solutions->len + 1))))
 	{
 		write(1, "Malloc error\n", 13);
 		exit(0);
@@ -56,7 +59,7 @@ static t_path		*generate_paths(size_t ants_nb, t_map *map)
 		++i;
 	}
 	paths[i].begin = NULL;
-	return (generate_paths2(total * ants_nb, paths));
+	return (generate_paths2(ants_nb, paths));
 }
 
 static void			solution_push_ants(size_t *id, t_path *paths, t_ant *ants)
@@ -119,7 +122,7 @@ void				tell_solutions(t_map *map)
 		add_vector(map->solutions, map->solution);
 	}
 	if (!(paths = generate_paths((map->ants_nb), map)) ||
-		!(ants = (t_ant *)ft_memalloc(sizeof(t_ant) * (map->ants_nb))))
+		!(ants = (t_ant *)ft_memalloc(sizeof(t_ant) * (map->ants_nb + 2))))
 	{
 		free(paths);
 		write(1, "Malloc error\n", 13);

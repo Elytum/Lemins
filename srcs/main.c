@@ -100,6 +100,7 @@ int				main(void)
 	map.ants_nb = 3;
 	if (!extract_nb_ants(&map))
 		return (1);
+	line = NULL;
 	while (get_next_line(0, &line) == 1)
 	{
 		write(1, line, ft_strlen(line));
