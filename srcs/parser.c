@@ -41,7 +41,6 @@ static void	*get_name(char *line)
 	return (ft_memdup(line, ptr - line + 1));
 }
 
-
 static int	check_comment(char *line, char *flag)
 {
 	if (line[0] == '#')

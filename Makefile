@@ -22,7 +22,8 @@ FILES	=	main.c		\
 			parser.c	\
 			vector.c	\
 			vector2.c	\
-			htable.c
+			htable.c	\
+			htable2.c
 
 INC		=	-I./includes -I ./libft
 LIBS	=	libft/libft.a
