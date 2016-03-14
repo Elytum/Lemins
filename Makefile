@@ -34,7 +34,7 @@ OBJS	=	$(SRCS:.c=.o)
 
 #--------------Actions----------------------#
 
-.PHONY: LIBRARIES $(NAME) clean fclean re test
+.PHONY: LIBRARIES $(NAME) clean fclean re
 
 all: $(NAME)
 
@@ -52,8 +52,9 @@ clean:
 	rm -f $(OBJS)
 	
 fclean:	clean
+	make fclean -C libft
 	rm -f $(NAME)
 
 re: fclean
-	make re -C libft
+	make fclean -C libft
 	make

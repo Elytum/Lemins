@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vector.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: achazal <achazal@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2014/11/03 20:20:13 by achazal           #+#    #+#             */
+/*   Updated: 2014/11/10 18:11:29 by achazal          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef VECTOR_H
 # define VECTOR_H
 
-#include <stdlib.h>
+# include <stdlib.h>
 
-typedef struct 	s_vector
+typedef struct	s_vector
 {
 	void		*content;
 	size_t		size;

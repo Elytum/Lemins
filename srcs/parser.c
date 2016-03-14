@@ -67,7 +67,7 @@ static int	check_comment(char *line, char *flag)
 static int	check_link(char *line, t_map *map)
 {
 	char	*linked[2];
-	entry_t	*pairs[2];
+	t_entry	*pairs[2];
 	char	*delimiter;
 
 	if (!(delimiter = ft_strchr(line, '-')))

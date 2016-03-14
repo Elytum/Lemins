@@ -15,8 +15,8 @@
 #include <limits.h>
 #include <libft.h>
 
-void					ht_fln(entry_t *first, entry_t **next,
-										entry_t **last, const char *key)
+void					ht_fln(t_entry *first, t_entry **next,
+										t_entry **last, const char *key)
 {
 	*next = first;
 	*last = NULL;
@@ -28,12 +28,12 @@ void					ht_fln(entry_t *first, entry_t **next,
 	}
 }
 
-void					ht_set(hashtable_t *hashtable, char *key, void *value)
+void					ht_set(t_hashtable *hashtable, char *key, void *value)
 {
 	const int			bin = ht_hash(hashtable, key);
-	entry_t				*newpair;
-	entry_t				*next;
-	entry_t				*last;
+	t_entry				*newpair;
+	t_entry				*next;
+	t_entry				*last;
 
 	ht_fln(hashtable->table[bin], &next, &last, key);
 	if (next != NULL && next->key != NULL && ft_strcmp(key, next->key) == 0)
@@ -56,10 +56,10 @@ void					ht_set(hashtable_t *hashtable, char *key, void *value)
 	}
 }
 
-void					*ht_get(hashtable_t *hashtable, char *key)
+void					*ht_get(t_hashtable *hashtable, char *key)
 {
 	int					bin;
-	entry_t				*pair;
+	t_entry				*pair;
 
 	bin = ht_hash(hashtable, key);
 	pair = hashtable->table[bin];
@@ -71,10 +71,10 @@ void					*ht_get(hashtable_t *hashtable, char *key)
 		return (pair->value);
 }
 
-entry_t					*ht_get_pair(hashtable_t *hashtable, char *key)
+t_entry					*ht_get_pair(t_hashtable *hashtable, char *key)
 {
 	int					bin;
-	entry_t				*pair;
+	t_entry				*pair;
 
 	bin = ht_hash(hashtable, key);
 	pair = hashtable->table[bin];
@@ -86,11 +86,11 @@ entry_t					*ht_get_pair(hashtable_t *hashtable, char *key)
 		return (pair);
 }
 
-void					ht_remove(hashtable_t *hashtable, char *key)
+void					ht_remove(t_hashtable *hashtable, char *key)
 {
 	int					bin;
-	entry_t				*pair;
-	entry_t				*old;
+	t_entry				*pair;
+	t_entry				*old;
 
 	bin = ht_hash(hashtable, key);
 	pair = hashtable->table[bin];

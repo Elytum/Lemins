@@ -15,15 +15,15 @@
 #include <limits.h>
 #include <libft.h>
 
-hashtable_t				*ht_create(int size)
+t_hashtable				*ht_create(int size)
 {
-	hashtable_t			*hashtable;
+	t_hashtable			*hashtable;
 	int					i;
 
 	hashtable = NULL;
 	if (size < 1 ||
-		(hashtable = malloc(sizeof(hashtable_t))) == NULL ||
-		(hashtable->table = malloc(sizeof(entry_t *) * size)) == NULL)
+		(hashtable = malloc(sizeof(t_hashtable))) == NULL ||
+		(hashtable->table = malloc(sizeof(t_entry *) * size)) == NULL)
 		exit(write(1, "Error\n", 6));
 	i = 0;
 	while (i < size)
@@ -32,7 +32,7 @@ hashtable_t				*ht_create(int size)
 	return (hashtable);
 }
 
-int						ht_hash(hashtable_t *hashtable, char *key)
+int						ht_hash(t_hashtable *hashtable, char *key)
 {
 	unsigned long int	hashval;
 	unsigned long int	i;
@@ -47,11 +47,11 @@ int						ht_hash(hashtable_t *hashtable, char *key)
 	return (hashval % hashtable->size);
 }
 
-entry_t					*ht_newpair(char *key, void *value)
+t_entry					*ht_newpair(char *key, void *value)
 {
-	entry_t				*newpair;
+	t_entry				*newpair;
 
-	if ((newpair = malloc(sizeof(entry_t))) == NULL ||
+	if ((newpair = malloc(sizeof(t_entry))) == NULL ||
 		(newpair->key = key) == NULL ||
 		(newpair->value = value) == NULL)
 		exit(write(1, "Error\n", 6));
@@ -59,11 +59,11 @@ entry_t					*ht_newpair(char *key, void *value)
 	return (newpair);
 }
 
-void					ht_free(hashtable_t *hashtable)
+void					ht_free(t_hashtable *hashtable)
 {
 	int					i;
-	entry_t				*ptr;
-	entry_t				*next;
+	t_entry				*ptr;
+	t_entry				*next;
 
 	i = 0;
 	while (i < hashtable->size)
@@ -87,11 +87,11 @@ void					ht_free(hashtable_t *hashtable)
 	free(hashtable);
 }
 
-void					ht_clear(hashtable_t *hashtable)
+void					ht_clear(t_hashtable *hashtable)
 {
 	int					i;
-	entry_t				*ptr;
-	entry_t				*next;
+	t_entry				*ptr;
+	t_entry				*next;
 
 	i = hashtable->size;
 	while (i < hashtable->size)

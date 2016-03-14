@@ -1,15 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lemins.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: achazal <achazal@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2014/11/03 20:20:13 by achazal           #+#    #+#             */
+/*   Updated: 2014/11/10 18:11:29 by achazal          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef LEMINS_H
 # define LEMINS_H
 
-#include <vector.h>
-#include <htable.h>
+# include <vector.h>
+# include <htable.h>
 
 typedef struct		s_map
 {
 	size_t			ants_nb;
 	char			*start;
 	char			*end;
-	hashtable_t		*cells;
+	t_hashtable		*cells;
 	size_t			size;
 	t_vector		*list;
 	t_vector		*working_list;
@@ -19,28 +31,28 @@ typedef struct		s_map
 	int				direct;
 }					t_map;
 
-typedef struct	s_ant
+typedef struct		s_ant
 {
-	char		**path;
-}				t_ant;
+	char			**path;
+}					t_ant;
 
-typedef struct	s_path
+typedef struct		s_path
 {
-	char		**begin;
-	size_t		len;
-	size_t		ants;
-}				t_path;
+	char			**begin;
+	size_t			len;
+	size_t			ants;
+}					t_path;
 
-#define MAX(a,b) ({ __typeof__ (a) _a = (a); __typeof__ (b) _b = (b); _a > _b ? _a : _b; })
+# define MAX(a,b) ({__typeof__(a) _a=(a);__typeof__(b) _b=(b);_a>_b?_a:_b;})
 
-#define IS_START    0b10000000
-#define IS_END      0b01000000
-#define HAVE_START  0b00100000
-#define HAVE_END    0b00010000
-#define CELLS_DONE  0b00001000
+# define IS_START    0b10000000
+# define IS_END      0b01000000
+# define HAVE_START  0b00100000
+# define HAVE_END    0b00010000
+# define CELLS_DONE  0b00001000
 
-int			solve(t_map *map, char *cell, size_t level);
-char		analyze_line(char *line, t_map *map);
-void		tell_solutions(t_map *map);
+int					solve(t_map *map, char *cell, size_t level);
+char				analyze_line(char *line, t_map *map);
+void				tell_solutions(t_map *map);
 
 #endif

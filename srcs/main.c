@@ -63,16 +63,13 @@ static void		solve_master(t_map *map)
 		write(1, "Error\n", 6);
 }
 
-static int		extract_nb_ants(t_map *map)
+static size_t	extract_nb_ants(t_map *map)
 {
 	char		*line;
 	char		*ptr;
 
 	if (get_next_line(0, &line) != 1 || *line < '0' || *line > '9')
-	{
-		write(1, "Error\n", 6);
 		return (0);
-	}
 	ptr = line;
 	while (*ptr)
 	{
@@ -96,9 +93,9 @@ int				main(void)
 
 	bzero(&map, sizeof(map));
 	if (!(map.cells = ht_create(2048)) ||
-		!(map.list = new_vector(sizeof(char *))) || !extract_nb_ants(&map))
-		return (1);
-	map.ants_nb = 3;
+		!(map.list = new_vector(sizeof(char *))) ||
+		!extract_nb_ants(&map) || map.ants_nb > 1000000)
+		exit(write(1, "Error\n", 6));
 	line = NULL;
 	while (get_next_line(0, &line) == 1)
 	{
