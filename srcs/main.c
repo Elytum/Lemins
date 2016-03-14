@@ -60,7 +60,7 @@ static void		solve_master(t_map *map)
 	if (map->solutions->len || map->direct)
 		tell_solutions(map);
 	else
-		write(1, "Error 1\n", 8);
+		write(1, "Error\n", 6);
 }
 
 static int		extract_nb_ants(t_map *map)
@@ -70,7 +70,7 @@ static int		extract_nb_ants(t_map *map)
 
 	if (get_next_line(0, &line) != 1 || *line < '0' || *line > '9')
 	{
-		write(1, "Error 3\n", 8);
+		write(1, "Error\n", 6);
 		return (0);
 	}
 	ptr = line;
@@ -95,11 +95,10 @@ int				main(void)
 	t_map		map;
 
 	bzero(&map, sizeof(map));
-	map.cells = ht_create(2048);
-	map.list = new_vector(sizeof(char *));
-	map.ants_nb = 3;
-	if (!extract_nb_ants(&map))
+	if (!(map.cells = ht_create(2048)) ||
+		!(map.list = new_vector(sizeof(char *))) || !extract_nb_ants(&map))
 		return (1);
+	map.ants_nb = 3;
 	line = NULL;
 	while (get_next_line(0, &line) == 1)
 	{
@@ -113,6 +112,6 @@ int				main(void)
 	if (map.start && map.end)
 		solve_master(&map);
 	else
-		write(1, "Error 0\n", 8);
+		write(1, "Error\n", 6);
 	return (1);
 }

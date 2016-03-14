@@ -24,7 +24,7 @@ hashtable_t				*ht_create(int size)
 	if (size < 1 ||
 		(hashtable = malloc(sizeof(hashtable_t))) == NULL ||
 		(hashtable->table = malloc(sizeof(entry_t *) * size)) == NULL)
-		return (NULL);
+		exit(write(1, "Error\n", 6));
 	i = 0;
 	while (i < size)
 		hashtable->table[i++] = NULL;
@@ -54,7 +54,7 @@ entry_t					*ht_newpair(char *key, void *value)
 	if ((newpair = malloc(sizeof(entry_t))) == NULL ||
 		(newpair->key = key) == NULL ||
 		(newpair->value = value) == NULL)
-		return (NULL);
+		exit(write(1, "Error\n", 6));
 	newpair->next = NULL;
 	return (newpair);
 }

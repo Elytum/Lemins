@@ -30,7 +30,10 @@ t_vector		*new_vector(size_t size)
 	t_vector	*new_vector;
 
 	if (!(new_vector = (t_vector *)malloc(sizeof(t_vector))))
+	{
+		exit(0);
 		return (NULL);
+	}
 	new_vector->size = size;
 	new_vector->len = 0;
 	new_vector->content = NULL;
@@ -54,12 +57,14 @@ size_t			add_vector(t_vector *vector, void *data)
 	{
 		vector->len = 0;
 		vector->max = 1;
-		vector->content = (void *)malloc(vector->max * vector->size);
+		if (!(vector->content = (void *)malloc(vector->max * vector->size)))
+			exit(0);
 	}
 	else if (vector->len == vector->max)
 	{
 		tmp = vector->content;
-		vector->content = (void *)malloc(vector->max * 2 * vector->size);
+		if (!(vector->content = (void *)malloc(vector->max * 2 * vector->size)))
+			exit(0);
 		ft_memcpy(vector->content, tmp, vector->max * vector->size);
 		free(tmp);
 		vector->max *= 2;

@@ -15,58 +15,45 @@
 #include <limits.h>
 #include <libft.h>
 
-#include <stdio.h>
-
-static entry_t			*ht_fln(entry_t **next, const char *key, void *value)
+void					ht_fln(entry_t *first, entry_t **next,
+										entry_t **last, const char *key)
 {
-	entry_t				*last;
-
+	*next = first;
+	*last = NULL;
 	while ((*next) != NULL && (*next)->key != NULL &&
-				ft_strcmp(key, (*next)->key) > 0)
+			ft_strcmp(key, (*next)->key) > 0)
 	{
-		last = (*next);
+		*last = (*next);
 		(*next) = (*next)->next;
 	}
-	if ((*next) != NULL && (*next)->key != NULL &&
-				ft_strcmp(key, (*next)->key) == 0)
-	{
-		free((*next)->value);
-		(*next)->value = value;
-		return (NULL);
-	}
-	return (last);
 }
 
 void					ht_set(hashtable_t *hashtable, char *key, void *value)
 {
-	int					bin;
+	const int			bin = ht_hash(hashtable, key);
 	entry_t				*newpair;
 	entry_t				*next;
 	entry_t				*last;
 
-	last = NULL;
-	newpair = NULL;
-	bin = ht_hash(hashtable, key);
-
-	// if (!ft_strcmp(key, "284"))
-	// 	dprintf(1, "\t\t0: [%i]\n", bin);
-
-	next = hashtable->table[bin];
-	if (!(last = ht_fln(&next, key, value)))
-		return ;
-	newpair = ht_newpair(key, value);
-	if (next == hashtable->table[bin])
+	ht_fln(hashtable->table[bin], &next, &last, key);
+	if (next != NULL && next->key != NULL && ft_strcmp(key, next->key) == 0)
 	{
-		newpair->next = next;
-		hashtable->table[bin] = newpair;
+		free(next->value);
+		next->value = value;
 	}
 	else
 	{
+		newpair = ht_newpair(key, value);
+		if (next == hashtable->table[bin])
+		{
+			newpair->next = next;
+			hashtable->table[bin] = newpair;
+			return ;
+		}
 		last->next = newpair;
 		if (next)
 			newpair->next = next;
 	}
-	ht_get(hashtable, key);
 }
 
 void					*ht_get(hashtable_t *hashtable, char *key)
@@ -91,14 +78,8 @@ entry_t					*ht_get_pair(hashtable_t *hashtable, char *key)
 
 	bin = ht_hash(hashtable, key);
 	pair = hashtable->table[bin];
-	if (!ft_strcmp(key, "284"))
-		dprintf(1, "\t\t0: [%i]\n", bin);
 	while (pair != NULL && pair->key != NULL && ft_strcmp(key, pair->key) > 0)
-	{
-		if (!ft_strcmp(key, "284"))
-			dprintf(1, "\tTesting [%s]\n", pair->key);
 		pair = pair->next;
-	}
 	if (pair == NULL || pair->key == NULL || ft_strcmp(key, pair->key) != 0)
 		return (NULL);
 	else

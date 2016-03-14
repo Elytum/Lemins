@@ -53,10 +53,7 @@ static t_path		*generate_paths(size_t ants_nb, t_map *map)
 	t_path			*paths;
 
 	if (!(paths = (t_path *)malloc(sizeof(t_path) * (map->solutions->len + 1))))
-	{
-		write(1, "Malloc error\n", 13);
-		exit(0);
-	}
+		exit(write(1, "Error\n", 6));
 	total = 0;
 	i = 0;
 	while (i < map->solutions->len)
@@ -135,11 +132,7 @@ void				tell_solutions(t_map *map)
 	}
 	if (!(paths = generate_paths((map->ants_nb), map)) ||
 		!(ants = (t_ant *)ft_memalloc(sizeof(t_ant) * (map->ants_nb + 2))))
-	{
-		free(paths);
-		write(1, "Malloc error\n", 13);
-		exit(0);
-	}
+		exit(write(1, "Error\n", 6));
 	id = 0;
 	while ((map->ants_nb))
 	{
